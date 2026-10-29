@@ -82,7 +82,7 @@ O modelo segue integralmente o UML fornecido, com chaves primárias nomeadas con
 ```
     autor: codAu (PK), nome
     assunto: codAs (PK), descricao
-    livro: codl (PK), titulo, editora, edicao, anoPublicacao, valor (campo adicional solicitado no desafio)
+    livro: codl (PK), titulo, editora, edicao, anoPublicacao, valor
     Livro_Autor: Tabela de junção N:N (Livro_Codl, Autor_CodAu)
     Livro_Assunto: Tabela de junção N:N (Livro_Codl, Assunto_CodAs)
 ```

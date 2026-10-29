@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\AutorRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: AutorRepository::class)]
 class Autor
@@ -17,8 +18,13 @@ class Autor
     #[ORM\Column(length: 40)]
     private ?string $nome = null;
 
-    #[ORM\OneToMany(mappedBy: 'autor', targetEntity: LivroAutor::class)]
-    private ?Collection $livros = null;
+    #[ORM\ManyToMany(targetEntity: Livro::class, mappedBy: 'autores')]
+    private Collection $livros;
+
+    public function __construct()
+    {
+        $this->livros = new ArrayCollection();
+    }
 
     public function getCodAu(): ?int
     {
@@ -44,7 +50,7 @@ class Autor
         return $this;
     }
 
-    public function getLivros()
+    public function getLivros(): Collection
     {
         return $this->livros;
     }

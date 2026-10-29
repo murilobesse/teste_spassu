@@ -13,8 +13,11 @@ import 'bootstrap';
 
 // importar sweetalert2
 import Swal from 'sweetalert2';
-
 window.Swal = Swal; // adiciona referencia global para o SweetAlert2
+
+// importar tom-select
+import 'tom-select/dist/css/tom-select.bootstrap5.css';
+import TomSelect from 'tom-select';
 
 // função para exibir toast de flash message do twig
 document.addEventListener('DOMContentLoaded', () => {
@@ -38,6 +41,16 @@ document.addEventListener('DOMContentLoaded', () => {
         Toast.fire({
             icon: type === 'success' ? 'success' : 'error',
             title: message
+        });
+    });
+
+    // Inicializar Tom Select para selects múltiplos
+    const selectsMultiplos = document.querySelectorAll('select.form-select[multiple]');
+    selectsMultiplos.forEach(select => {
+        new TomSelect(select, {
+            plugins: ['remove_button'],
+            placeholder: 'Selecionar...',
+            maxItems: null
         });
     });
 });

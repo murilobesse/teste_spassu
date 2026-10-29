@@ -15,7 +15,7 @@ class Autor
     private ?int $CodAu = null;
 
     #[ORM\Column(length: 40)]
-    private ?string $Nome = null;
+    private ?string $nome = null;
 
     #[ORM\OneToMany(mappedBy: 'autor', targetEntity: LivroAutor::class)]
     private ?Collection $livros = null;
@@ -34,12 +34,12 @@ class Autor
 
     public function getNome(): ?string
     {
-        return $this->Nome;
+        return $this->nome;
     }
 
-    public function setNome(string $Nome): static
+    public function setNome(string $nome): static
     {
-        $this->Nome = $Nome;
+        $this->nome = $nome;
 
         return $this;
     }

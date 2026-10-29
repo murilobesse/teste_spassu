@@ -20,8 +20,10 @@ class AutorType extends AbstractType
                 'label' => 'Nome do Autor',
                 'attr' => [
                     'class' => 'form-control',
-                    'placeholder' => 'Ex: Albert Camus'
+                    'placeholder' => 'Ex: Albert Camus',
+                    'required' => true
                 ],
+                'empty_data' => '',
                 'constraints' => [
                     new NotBlank(['message' => 'O nome do autor é obrigatório.']),
                     new Length(['max' => 40, 'maxMessage' => 'O nome não pode ter mais de 40 caracteres.'])

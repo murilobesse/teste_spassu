@@ -6,6 +6,7 @@ Encore
     .setOutputPath('public/build/')
     .setPublicPath('/build')
     .addEntry('app', './assets/app.mjs')
+    .addEntry('script_autor', './assets/js/autor/script.js') //scripts da pagina autor
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())

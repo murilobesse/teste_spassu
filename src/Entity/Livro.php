@@ -28,7 +28,7 @@ class Livro
     private ?string $anoPublicacao = null;
 
     #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
-    private ?float $valor = null;
+    private ?string $valor = null;
 
     #[ORM\ManyToMany(targetEntity: Autor::class, inversedBy: 'livros')]
     #[ORM\JoinTable(name: 'Livro_Autor')]

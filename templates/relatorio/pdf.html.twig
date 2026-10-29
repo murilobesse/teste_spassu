@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Relatório de Livros por Autor</title>
+    <style>
+        body {
+            font-family: 'DejaVu Sans', Arial, sans-serif;
+            font-size: 11px;
+            color: #333;
+        }
+        
+        h1 {
+            font-size: 20px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .autor-header {
+            margin-top: 15px;
+            width: 100%;
+            font-size: 12px;
+            background-color: #2c3e50;
+            color: #ffffff;
+            overflow: hidden;
+            padding: 6px 8px;
+            box-sizing: border-box;
+        }
+
+        .autor-nome {
+            float: left;
+            width: 50%;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .autor-total-livros {
+            float: right;
+            width: 50%;
+            text-align: right;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 15px;
+        }
+        
+        thead {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        th {
+            padding: 8px 5px;
+            text-align: left;
+            font-weight: bold;
+            font-size: 10px;
+            border-bottom: 2px solid #bdc3c7;
+        }
+        
+        td {
+            padding: 6px 5px;
+            border-bottom: 1px solid #ecf0f1;
+            font-size: 10px;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .text-right {
+            text-align: right;
+        }
+        
+        .rodape-relatorio {
+            margin-top: 15px;
+            width: 100%;
+            font-size: 10px;
+            color: #7f8c8d;
+            overflow: hidden;
+        }
+
+        .data-geracao {
+            float: left;
+            text-align: left;
+            width: 50%;
+        }
+
+        .total-registros {
+            float: right;
+            text-align: right;
+            width: 50%;
+        }
+    </style>
+</head>
+<body>
+    <h1>Relatório de Livros por Autor</h1>
+    
+    {% for autor, livros in relatorio %}
+        <div class="autor-header">
+            <div class="autor-nome">{{ autor }}</div>
+            <div class="autor-total-livros">{{ livros|length }} livro(s)</div>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Editora</th>
+                    <th>Edição</th>
+                    <th>Ano</th>
+                    <th class="text-right">Valor (R$)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for livro in livros %}
+                    <tr>
+                        <td>{{ livro.livro_titulo }}</td>
+                        <td>{{ livro.livro_editora }}</td>
+                        <td>{{ livro.livro_edicao }}</td>
+                        <td>{{ livro.livro_ano }}</td>
+                        <td class="text-right">{{ livro.livro_valor|number_format(2, ',', '.') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p style="text-align: center; margin-top: 40px;">Nenhum registro encontrado.</p>
+    {% endfor %}
+    
+    <div class="rodape-relatorio">
+        <div class="data-geracao">
+            Gerado em: {{ dataGeracao }}
+        </div>
+
+        <div class="total-registros">
+            Total de autores: {{ totalAutores }} | Total de livros: {{ totalLivros }}
+        </div>
+    </div>
+</body>
+</html>

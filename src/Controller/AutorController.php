@@ -11,21 +11,46 @@ use App\Entity\Autor;
 use App\Form\AutorType;
 use App\Repository\AutorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/autor')]
 final class AutorController extends AbstractController
 {
     #[Route('/', name: 'app_autor_index', methods: ['GET'])]
-    public function index(AutorRepository $autorRepository): Response
+    public function index(Request $request, AutorRepository $autorRepository, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
+        $novoAutor = new Autor();
+        $formNovo = $this->createForm(AutorType::class, $novoAutor);
+        $formNovo->handleRequest($request);
+
+        if ($formNovo->isSubmitted() && $formNovo->isValid()) {
+            $entityManager->persist($novoAutor);
+            $entityManager->flush();
+            $this->addFlash('success', 'Autor criado com sucesso!');
+            return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $formEditar = $this->createForm(AutorType::class, new Autor())->createView();
+
+        $queryBuilder = $autorRepository->createQueryBuilder('a')
+            ->orderBy('a.nome', 'ASC');
+        $query = $queryBuilder->getQuery();
+        $autors = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
         return $this->render('autor/index.html.twig', [
-            'autors' => $autorRepository->findAll(),
+            'autors' => $autors,
+            'form_novo' => $formNovo->createView(),
+            'form_editar' => $formEditar,
         ]);
     }
 
     #[Route('/novo', name: 'app_autor_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, AutorRepository $autorRepository, EntityManagerInterface $entityManager): Response
     {
         $autor = new Autor();
         $form = $this->createForm(AutorType::class, $autor);
@@ -37,12 +62,19 @@ final class AutorController extends AbstractController
 
             $this->addFlash('success', 'Autor criado com sucesso!');
             return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            $errors = $form->getErrors(true); 
+            $errorMessages = [];
+            
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            
+            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+            $this->addFlash('error', 'Erro ao criar autor: ' . $mensagemErro);
         }
 
-        return $this->render('autor/new.html.twig', [
-            'autor' => $autor,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{codAu}/editar', name: 'app_autor_edit', methods: ['GET', 'POST'])]
@@ -62,12 +94,19 @@ final class AutorController extends AbstractController
 
             $this->addFlash('success', 'Autor atualizado com sucesso!');
             return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
+        } else {
+            $errors = $form->getErrors(true); 
+            $errorMessages = [];
+            
+            foreach ($errors as $error) {
+                $errorMessages[] = $error->getMessage();
+            }
+            
+            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+            $this->addFlash('error', 'Erro ao editar autor: ' . $mensagemErro);
         }
 
-        return $this->render('autor/edit.html.twig', [
-            'autor' => $autor,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/{codAu}', name: 'app_autor_delete', methods: ['POST'])]

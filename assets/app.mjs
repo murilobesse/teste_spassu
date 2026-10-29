@@ -8,4 +8,36 @@
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
 
+// importar bootstrap
 import 'bootstrap';
+
+// importar sweetalert2
+import Swal from 'sweetalert2';
+
+window.Swal = Swal; // adiciona referencia global para o SweetAlert2
+
+// função para exibir toast de flash message do twig
+document.addEventListener('DOMContentLoaded', () => {
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+        }
+    });
+    
+    const flashMessages = document.querySelectorAll('.flash-message');
+    flashMessages.forEach(el => {
+        const type = el.dataset.type; // 'success' ou 'error'
+        const message = el.textContent.trim();
+        
+        Toast.fire({
+            icon: type === 'success' ? 'success' : 'error',
+            title: message
+        });
+    });
+});

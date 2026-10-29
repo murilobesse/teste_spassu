@@ -20,23 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Personalizar mensagem de validação nativa do HTML5 (Browser)
-document.addEventListener('DOMContentLoaded', () => {
-    const camposObrigatorios = document.querySelectorAll('input[required], select[required], textarea[required]');
-
-    camposObrigatorios.forEach(campo => {
-        campo.addEventListener('invalid', function () {
-            if (this.validity.valueMissing) {
-                this.setCustomValidity('Este campo é obrigatório!');
-            }
-        });
-        
-        campo.addEventListener('input', function () {
-            this.setCustomValidity('');
-        });
-    });
-});
-
 window.confirmarExclusao = function(event, nome) {
     event.preventDefault();
     Swal.fire({

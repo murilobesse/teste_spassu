@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+    <div class="mb-3">
+        {{ form_label(form.nome) }}
+        {{ form_widget(form.nome) }}
+        {{ form_errors(form.nome) }}
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a href="{{ path('app_autor_index') }}" class="btn btn-secondary">Voltar</a>
+        <button class="btn btn-success">{{ button_label|default('Salvar') }}</button>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Autores{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Lista de Autores</h1>
+    <a href="{{ path('app_autor_new') }}" class="btn btn-primary">Novo Autor</a>
+</div>
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+{% for message in app.flashes('error') %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover table-striped">
+            <thead class="table-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for autor in autors %}
+                <tr>
+                    <td>{{ autor.codAu }}</td>
+                    <td>{{ autor.nome }}</td>
+                    <td class="text-end">
+                        <a href="{{ path('app_autor_edit', {'codAu': autor.codAu}) }}" class="btn btn-sm btn-outline-primary">Editar</a>
+                        <form method="post" action="{{ path('app_autor_delete', {'codAu': autor.codAu}) }}" style="display:inline;" onsubmit="return confirm('Tem certeza que deseja excluir este autor?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ autor.codAu) }}">
+                            <button class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">Nenhum autor encontrado.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

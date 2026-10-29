@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Novo Autor{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Cadastrar Novo Autor</h1>
+        {{ include('autor/_form.html.twig') }}
+    </div>
+{% endblock %}

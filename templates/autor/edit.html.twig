@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Editar Autor{% endblock %}
+
+{% block body %}
+    <div class="card shadow-sm p-4">
+        <h1 class="mb-4">Editar Autor</h1>
+        {{ include('autor/_form.html.twig', {'button_label': 'Atualizar'}) }}
+    </div>
+{% endblock %}

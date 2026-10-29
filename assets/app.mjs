@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.addEventListener('mouseleave', Swal.resumeTimer);
         }
     });
-    
+
     const flashMessages = document.querySelectorAll('.flash-message');
     flashMessages.forEach(el => {
         const type = el.dataset.type; // 'success' ou 'error'
@@ -38,6 +38,23 @@ document.addEventListener('DOMContentLoaded', () => {
         Toast.fire({
             icon: type === 'success' ? 'success' : 'error',
             title: message
+        });
+    });
+});
+
+// Personalizar mensagem de validação nativa do HTML5 (Browser)
+document.addEventListener('DOMContentLoaded', () => {
+    const camposObrigatorios = document.querySelectorAll('input[required], select[required], textarea[required]');
+
+    camposObrigatorios.forEach(campo => {
+        campo.addEventListener('invalid', function () {
+            if (this.validity.valueMissing) {
+                this.setCustomValidity('Este campo é obrigatório!');
+            }
+        });
+        
+        campo.addEventListener('input', function () {
+            this.setCustomValidity('');
         });
     });
 });

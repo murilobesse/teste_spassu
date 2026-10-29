@@ -29,6 +29,9 @@ class Livro
     #[ORM\OneToMany(mappedBy: 'livro', targetEntity: LivroAutor::class)]
     private ?Collection $autores = null;
 
+    #[ORM\OneToMany(mappedBy: 'livro', targetEntity: LivroAssunto::class)]
+    private ?Collection $assuntos = null;
+
     public function getCodl(): ?int
     {
         return $this->Codl;

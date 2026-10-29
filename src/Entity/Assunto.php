@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AssuntoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: AssuntoRepository::class)]
 class Assunto
@@ -14,7 +15,10 @@ class Assunto
     private ?int $CodAs = null;
 
     #[ORM\Column(length: 20)]
-    private ?string $Descricao = null;
+    private ?string $descricao = null;
+
+    #[ORM\OneToMany(mappedBy: 'assunto', targetEntity: LivroAssunto::class)]
+    private ?Collection $livros = null;
 
     public function getCodAs(): ?int
     {
@@ -30,13 +34,18 @@ class Assunto
 
     public function getDescricao(): ?string
     {
-        return $this->Descricao;
+        return $this->descricao;
     }
 
-    public function setDescricao(string $Descricao): static
+    public function setDescricao(string $descricao): static
     {
-        $this->Descricao = $Descricao;
+        $this->descricao = $descricao;
 
         return $this;
+    }
+
+    public function getLivros()
+    {
+        return $this->livros;
     }
 }

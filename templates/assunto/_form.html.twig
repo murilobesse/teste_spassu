@@ -1,0 +1,12 @@
+{{ form_start(form, {'action': action}) }}
+    <div class="mb-3">
+        {{ form_label(form.descricao, 'Descrição do Assunto', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.descricao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Distopia', 'maxlength': 40, 'autocomplete': 'off'}}) }}
+        {{ form_errors(form.descricao) }}
+    </div>
+
+    <div class="d-flex justify-content-between gap-2">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">{{ button_label|default('Salvar') }}</button>
+    </div>
+{{ form_end(form) }}

@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Assuntos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Lista de Assuntos</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoAssunto">
+        <i class="bi bi-plus-lg"></i> Novo Assunto
+    </button>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for assunto in assuntos %}
+                <tr>
+                    <td>{{ assunto.codAs }}</td>
+                    <td>{{ assunto.descricao }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary btn-editar-assunto" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalEditarAssunto"
+                                data-codas="{{ assunto.codAs }}" 
+                                data-descricao="{{ assunto.descricao }}">
+                            Editar
+                        </button>
+                        <form method="post" 
+                              action="{{ path('app_assunto_delete', {'codAs': assunto.codAs}) }}" 
+                              style="display:inline;" 
+                              onsubmit="return confirmarExclusao(event, '{{ assunto.descricao }}');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ assunto.codAs) }}">
+                            <button class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" class="text-center text-muted">Nenhum assunto encontrado.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {# Renderização da Paginação Bootstrap 5 #}
+        <div class="d-flex justify-content-center mt-4">
+            {{ knp_pagination_render(assuntos) }}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Novo Assunto -->
+<div class="modal fade" id="modalNovoAssunto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Assunto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ include('assunto/_form.html.twig', {
+                    'form': form_novo,
+                    'button_label': 'Cadastrar',
+                    'action': path('app_assunto_new')
+                }) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Edição -->
+<div class="modal fade" id="modalEditarAssunto" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Assunto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form_editar, {'attr': {'id': 'formEditarDinamico'}}) }}
+                    <div class="mb-3">
+                        {{ form_label(form_editar.descricao, 'Descrição do Assunto', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(form_editar.descricao, {'id': 'inputEditarDescricao', 'attr': {'class': 'form-control', 'placeholder': 'Ex: Distopia'}}) }}
+                        {{ form_errors(form_editar.descricao) }}
+                    </div>
+                    <div class="d-flex justify-content-between gap-2">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">Atualizar</button>
+                    </div>
+                {{ form_end(form_editar) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('script_assunto') }}
+{% endblock %}
+
+{% endblock %}

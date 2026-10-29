@@ -9,12 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 class LivroAssunto
 {
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Livro::class)]
+    #[ORM\ManyToOne(targetEntity: Livro::class, inversedBy: 'assuntos')]
     #[ORM\JoinColumn(name: 'Livro_Codl', referencedColumnName: 'codl')]
     private ?Livro $livro = null;
 
     #[ORM\Id]
-    #[ORM\ManyToOne(targetEntity: Assunto::class)]
+    #[ORM\ManyToOne(targetEntity: Assunto::class, inversedBy: 'livros')]
     #[ORM\JoinColumn(name: 'Assunto_CodAs', referencedColumnName: 'codAs')]
     private ?Assunto $assunto = null;
 }

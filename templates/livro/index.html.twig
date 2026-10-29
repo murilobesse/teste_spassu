@@ -1,0 +1,117 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livros{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Lista de Livros</h1>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalNovoLivro">
+        <i class="bi bi-plus-lg"></i> Novo Livro
+    </button>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover table-striped mb-0">
+            <thead class="table-dark">
+                <tr>
+                    <th>Código</th>
+                    <th>Título</th>
+                    <th>Editora</th>
+                    <th>Edição</th>
+                    <th>Ano Pub.</th>
+                    <th class="text-end">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for livro in livros %}
+                <tr>
+                    <td>{{ livro.codl }}</td>
+                    <td>{{ livro.titulo }}</td>
+                    <td>{{ livro.editora }}</td>
+                    <td>{{ livro.edicao }}</td>
+                    <td>{{ livro.anoPublicacao }}</td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-primary btn-editar-livro" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#modalEditarLivro"
+                                data-codl="{{ livro.codl }}"
+                                data-titulo="{{ livro.titulo }}"
+                                data-editora="{{ livro.editora }}"
+                                data-edicao="{{ livro.edicao }}"
+                                data-ano="{{ livro.anoPublicacao }}"
+                                data-valor="{{ livro.valor }}"
+                                data-autores="{{ livro.autores|map(a => a.codAu)|join(',') }}"
+                                data-assuntos="{{ livro.assuntos|map(a => a.codAs)|join(',') }}">
+                            Editar
+                        </button>
+                        <form method="post" 
+                              action="{{ path('app_livro_delete', {'codl': livro.codl}) }}" 
+                              style="display:inline;" 
+                              onsubmit="return confirmarExclusao(event, '{{ livro.titulo }}');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livro.codl) }}">
+                            <button class="btn btn-sm btn-outline-danger">Excluir</button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted">Nenhum livro encontrado.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        {# Renderização da Paginação Bootstrap 5 #}
+        <div class="d-flex justify-content-center mt-4">
+            {{ knp_pagination_render(livros) }}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Novo Livro -->
+<div class="modal fade" id="modalNovoLivro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Novo Livro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {{ include('livro/_form.html.twig', {
+                    'form': form_novo,
+                    'button_label': 'Cadastrar',
+                    'action': path('app_livro_new')
+                }) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Edição -->
+<div class="modal fade" id="modalEditarLivro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Livro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {{ form_start(form_editar, {'attr': {'id': 'formEditarLivro'}}) }}
+                    {{ include('livro/_form.html.twig', {
+                        'form': form_editar,
+                        'button_label': 'Atualizar',
+                        'action': path('app_livro_edit', {'codl': 0})
+                    }) }}
+                {{ form_end(form_editar) }}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('script_livro') }}
+{% endblock %}
+
+{% endblock %}

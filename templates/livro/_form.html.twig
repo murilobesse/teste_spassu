@@ -1,0 +1,58 @@
+{{ form_start(form, {'action': action}) }}
+    
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.titulo, 'Título do Livro', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.titulo, {'attr': {'class': 'form-control', 'placeholder': 'Ex: O Estrangeiro', 'autocomplete': 'off'}}) }}
+            {{ form_errors(form.titulo) }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.editora, 'Editora do Livro', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.editora, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Editora Record', 'autocomplete': 'off'}}) }}
+            {{ form_errors(form.editora) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.edicao, 'Edição do Livro', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.edicao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 5', 'autocomplete': 'off'}}) }}
+            {{ form_errors(form.edicao) }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.anoPublicacao, 'Ano de Publicação', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.anoPublicacao, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 2020', 'autocomplete': 'off'}}) }}
+            {{ form_errors(form.anoPublicacao) }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            {{ form_label(form.valor, 'Valor (R$)', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.valor, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 29.90', 'step': '0.01', 'autocomplete': 'off'}}) }}
+            {{ form_errors(form.valor) }}
+            <div class="form-text text-muted">Use ponto para centavos (ex: 50.00)</div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.autores, 'Autores', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.autores) }}
+            {{ form_errors(form.autores) }}
+        </div>
+
+        <div class="col-md-6 mb-3">
+            {{ form_label(form.assuntos, 'Assuntos', {'label_attr': {'class': 'form-label'}}) }}
+            {{ form_widget(form.assuntos) }}
+            {{ form_errors(form.assuntos) }}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between gap-2">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="submit" class="btn btn-success">{{ button_label|default('Salvar') }}</button>
+    </div>
+{{ form_end(form) }}

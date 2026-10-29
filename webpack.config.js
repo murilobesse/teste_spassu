@@ -8,6 +8,7 @@ Encore
     .addEntry('app', './assets/app.mjs')
     .addEntry('script_autor', './assets/js/autor/script.js') //scripts da pagina autor
     .addEntry('script_assunto', './assets/js/assunto/script.js') //scripts da pagina assunto
+    .addEntry('script_livro', './assets/js/livro/script.js') //scripts da pagina livro
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableSourceMaps(!Encore.isProduction())

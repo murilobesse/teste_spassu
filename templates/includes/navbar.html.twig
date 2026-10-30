@@ -1,29 +1,67 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container">
-        <a class="navbar-brand" href="">Desafio Livros</a>
+        <a class="navbar-brand" href="">Cadastro Livros</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="menuPrincipal">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="">Início</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/autor">Autores</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/assunto">Assuntos</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/livro">Livros</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/relatorio">Relatório</a>
-                </li>
-            </ul>
+            {% if app.user %}
+                <ul class="navbar-nav m-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_home') }}">Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_autor_index') }}">Autores</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_assunto_index') }}">Assuntos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_livro_index') }}">Livros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_relatorio_index') }}">Relatório</a>
+                    </li>
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <!--li class="nav-item">
+                            <a class="nav-link" href="{{ path('app_home') }}">Usuários</a>
+                        </li-->
+                    {% endif %}
+                </ul>
+
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <span class="bg-primary text-white rounded-circle d-inline-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px; font-size: 14px;">
+                                {{ app.user.nome|slice(0, 1)|upper }}
+                            </span>
+                            {{ app.user.nome }}
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <span class="dropdown-item-text text-muted small">
+                                    {{ app.user.email }}
+                                </span>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                                    🚪 Sair
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Entrar</a>
+                    </li>
+                </ul>
+            {% endif %}
         </div>
     </div>
 </nav>

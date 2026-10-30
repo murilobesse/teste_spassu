@@ -8,15 +8,36 @@ use Doctrine\Persistence\ObjectManager;
 use App\Entity\Assunto;
 use App\Entity\Autor;
 use App\Entity\Livro;
+use App\Entity\User;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('pt_BR');
 
-        // 1. Gerar Assuntos (Limite: 20 caracteres)
+        // Gerar Usuário ADMIN
+        $admin = new User();
+        $admin->setEmail('admin@teste.com');
+        $admin->setNome('Administrador');
+        $admin->setAtivo(true);
+        $admin->setRoles(['ROLE_ADMIN']);
+
+        $hashedPassword = $this->passwordHasher->hashPassword($admin, '123456');
+        $admin->setPassword($hashedPassword);
+        
+        $manager->persist($admin);
+
+        // Gerar Assuntos
         $assuntos = [];
         for ($i = 0; $i < 15; $i++) {
             $assunto = new Assunto();
@@ -26,7 +47,7 @@ class AppFixtures extends Fixture
             $assuntos[] = $assunto;
         }
 
-        // 2. Gerar Autores (Limite: 40 caracteres)
+        // Gerar Autores
         $autores = [];
         for ($i = 0; $i < 20; $i++) {
             $autor = new Autor();
@@ -35,14 +56,14 @@ class AppFixtures extends Fixture
             $autores[] = $autor;
         }
 
-        // 3. Gerar Livros e relacioná-los
+        // Gerar Livros e vincular aos Autores e Assuntos
         for ($i = 0; $i < 40; $i++) {
             $livro = new Livro();
             
-            // Título (Limite: 40 caracteres)
+            // Título 
             $livro->setTitulo(mb_substr($faker->sentence(3), 0, 40));
             
-            // Editora (Limite: 40 caracteres)
+            // Editora 
             $livro->setEditora(mb_substr($faker->company() . ' Editora', 0, 40));
             
             $livro->setEdicao($faker->numberBetween(1, 5));

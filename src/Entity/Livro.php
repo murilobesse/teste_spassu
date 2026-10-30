@@ -27,7 +27,7 @@ class Livro
     #[ORM\Column(length: 4)]
     private ?string $anoPublicacao = null;
 
-    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
     private ?string $valor = null;
 
     #[ORM\ManyToMany(targetEntity: Autor::class, inversedBy: 'livros')]

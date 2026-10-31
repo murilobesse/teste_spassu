@@ -11,6 +11,7 @@ use App\Entity\Autor;
 use App\Form\AutorType;
 use App\Repository\AutorRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use SortDirection;
 
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -34,7 +35,7 @@ final class AutorController extends AbstractController
         $formEditar = $this->createForm(AutorType::class, new Autor())->createView();
 
         $queryBuilder = $autorRepository->createQueryBuilder('a')
-            ->orderBy('a.nome', 'ASC');
+            ->orderBy('a.nome', SortDirection::Ascending);
         $query = $queryBuilder->getQuery();
         $autors = $paginator->paginate(
             $query,
@@ -88,6 +89,15 @@ final class AutorController extends AbstractController
 
         $form = $this->createForm(AutorType::class, $autor);
         $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && !$form->isValid()) {
+    foreach ($form->getErrors(true) as $error) {
+        dump([
+            'campo' => $error->getOrigin()?->getName(),
+            'erro' => $error->getMessage(),
+        ]);
+    }
+}
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();

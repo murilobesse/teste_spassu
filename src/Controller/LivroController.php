@@ -11,6 +11,7 @@ use App\Entity\Livro;
 use App\Form\LivroType;
 use App\Repository\LivroRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use SortDirection;
 
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -34,7 +35,7 @@ final class LivroController extends AbstractController
         $formEditar = $this->createForm(LivroType::class, new Livro())->createView();
 
         $queryBuilder = $livroRepository->createQueryBuilder('l')
-            ->orderBy('l.titulo', 'ASC');
+            ->orderBy('l.titulo', SortDirection::Ascending);
         $query = $queryBuilder->getQuery();
         $livros = $paginator->paginate(
             $query,

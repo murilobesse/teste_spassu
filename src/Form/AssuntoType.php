@@ -25,8 +25,8 @@ class AssuntoType extends AbstractType
                 ],
                 'empty_data' => '',
                 'constraints' => [
-                    new NotBlank(['message' => 'A descrição do assunto é obrigatória.']),
-                    new Length(['max' => 40, 'maxMessage' => 'A descrição não pode ter mais de 40 caracteres.'])
+                    new NotBlank(message: 'A descrição do assunto é obrigatória.'),
+                    new Length(max: 40, maxMessage: 'A descrição não pode ter mais de 40 caracteres.')
                 ]
             ])
         ;

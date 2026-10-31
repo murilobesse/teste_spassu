@@ -32,8 +32,8 @@ class LivroType extends AbstractType
                 ],
                 'empty_data' => '',
                 'constraints' => [
-                    new NotBlank(['message' => 'O título é obrigatório.']),
-                    new Length(['max' => 40, 'maxMessage' => 'O título não pode ter mais de 40 caracteres.'])
+                    new NotBlank(message: 'O título é obrigatório.'),
+                    new Length(max: 40, maxMessage: 'O título não pode ter mais de 40 caracteres.')
                 ]
             ])
             ->add('editora', TextType::class, [
@@ -45,8 +45,8 @@ class LivroType extends AbstractType
                 ],
                 'empty_data' => '',
                 'constraints' => [
-                    new NotBlank(['message' => 'A editora é obrigatória.']),
-                    new Length(['max' => 40, 'maxMessage' => 'A editora não pode ter mais de 40 caracteres.'])
+                    new NotBlank(message: 'A editora é obrigatória.'),
+                    new Length(max: 40, maxMessage: 'A editora não pode ter mais de 40 caracteres.')
                 ]
             ])
             ->add('edicao', NumberType::class, [
@@ -58,8 +58,8 @@ class LivroType extends AbstractType
                 ],
                 'empty_data' => '',
                 'constraints' => [
-                    new NotBlank(['message' => 'A edição é obrigatória.']),
-                    new Length(['max' => 40, 'maxMessage' => 'A edição não pode ter mais de 40 caracteres.'])
+                    new NotBlank(message: 'A edição é obrigatória.'),
+                    new Length(max: 40, maxMessage: 'A edição não pode ter mais de 40 caracteres.')
                 ]
             ])
             ->add('anoPublicacao', NumberType::class, [
@@ -72,8 +72,8 @@ class LivroType extends AbstractType
                 ],
                 'empty_data' => '',
                 'constraints' => [
-                    new NotBlank(['message' => 'O ano de publicação é obrigatório.']),
-                    new Length(['max' => 4, 'maxMessage' => 'O ano de publicação não pode ter mais de 4 caracteres.'])
+                    new NotBlank(message: 'O ano de publicação é obrigatório.'),
+                    new Length(max: 4, maxMessage: 'O ano de publicação não pode ter mais de 4 caracteres.')
                 ]
             ])
             ->add('valor', TextType::class, [
@@ -86,8 +86,8 @@ class LivroType extends AbstractType
                     'required' =>true
                 ],
                 'constraints' => [
-                    new NotBlank(['message' => 'O valor é obrigatório.']),
-                    new PositiveOrZero(['message' => 'O valor não pode ser negativo.'])
+                    new NotBlank(message: 'O valor é obrigatório.'),
+                    new PositiveOrZero(message: 'O valor não pode ser negativo.')
                 ]
             ])
             ->add('autores', EntityType::class, [
@@ -101,7 +101,7 @@ class LivroType extends AbstractType
                     'placeholder' => 'Selecione os autores...',
                     'autocomplete' => 'off',
                 ],
-                'constraints' => [new NotBlank(['message' => 'Selecione pelo menos um autor.'])]
+                'constraints' => [new NotBlank(message: 'Selecione pelo menos um autor.')],
             ])
             ->add('assuntos', EntityType::class, [
                 'class' => Assunto::class,
@@ -114,7 +114,7 @@ class LivroType extends AbstractType
                     'placeholder' => 'Selecione os assuntos...',
                     'autocomplete' => 'off',
                 ],
-                'constraints' => [new NotBlank(['message' => 'Selecione pelo menos um assunto.'])]
+                'constraints' => [new NotBlank(message: 'Selecione pelo menos um assunto.')]
             ]);
 
         $builder->get('valor')->addModelTransformer(new MoneyToFloatTransformer());

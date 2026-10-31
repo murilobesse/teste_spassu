@@ -7,7 +7,7 @@ use Symfony\Component\Form\DataTransformerInterface;
 class MoneyToFloatTransformer implements DataTransformerInterface
 {
     /**
-     * Converte o valor do Banco (Float) para o Formulário (String com vírgula)
+     * Converter o valor do Banco (Float) para o Formulário (String com vírgula)
      */
     public function transform($value): string
     {
@@ -19,7 +19,7 @@ class MoneyToFloatTransformer implements DataTransformerInterface
     }
 
     /**
-     * Converte o valor do Formulário (String com vírgula) para o Banco (Float)
+     * Converter o valor do Formulário (String com vírgula) para o Banco (Float)
      */
     public function reverseTransform($value): ?float
     {

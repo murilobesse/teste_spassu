@@ -25,8 +25,8 @@ class AutorType extends AbstractType
                 ],
                 'empty_data' => '',
                 'constraints' => [
-                    new NotBlank(['message' => 'O nome do autor é obrigatório.']),
-                    new Length(['max' => 40, 'maxMessage' => 'O nome não pode ter mais de 40 caracteres.'])
+                    new NotBlank(message: 'O nome do autor é obrigatório.'),
+                    new Length(max: 40, maxMessage: 'O nome não pode ter mais de 40 caracteres.')
                 ]
             ])
         ;

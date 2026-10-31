@@ -11,6 +11,7 @@ use App\Entity\Assunto;
 use App\Form\AssuntoType;
 use App\Repository\AssuntoRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use SortDirection;
 
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -34,7 +35,7 @@ final class AssuntoController extends AbstractController
         $formEditar = $this->createForm(AssuntoType::class, new Assunto())->createView();
 
         $queryBuilder = $assuntoRepository->createQueryBuilder('a')
-            ->orderBy('a.descricao', 'ASC');
+            ->orderBy('a.descricao', SortDirection::Ascending);
         $query = $queryBuilder->getQuery();
         $assuntos = $paginator->paginate(
             $query,

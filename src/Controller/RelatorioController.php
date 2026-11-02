@@ -67,7 +67,9 @@ class RelatorioController extends AbstractController
             'margin_right' => 15,
             'margin_top' => 20,
             'margin_bottom' => 15,
+            'tempDir' => '/tmp/mpdf',
         ]);
+        
 
         $mpdf->SetTitle('Relatório de Livros por Autor');
         $mpdf->SetAuthor('Sistema de Gestão de Livros');

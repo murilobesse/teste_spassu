@@ -1,89 +1,133 @@
-# Desafio Técnico - Cadastro de Livros
+# 📚 Sistema de Gestão de Livros
 
-Projeto desenvolvido como parte de um teste técnico para a vaga de Desenvolvedor PHP/Symfony TWIG. O sistema contempla o cadastro de Livros, Autores e Assuntos, seguindo rigorosamente o modelo de dados (UML) fornecido, com foco em boas práticas, qualidade de código e arquitetura limpa.
+> Sistema de gestão de livros desenvolvido como desafio técnico.
 
-## 🛠️ Stack Tecnológica
+![Symfony](https://img.shields.io/badge/Symfony-7.4-000000?style=for-the-badge&logo=symfony)
+![PHP](https://img.shields.io/badge/PHP-8.4-777BB4?style=for-the-badge&logo=php)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-18-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker)
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=for-the-badge&logo=bootstrap)
+![Tests](https://img.shields.io/badge/Tests-PHPUnit-3C7EBB?style=for-the-badge&logo=php)
 
-- **Backend**: PHP 8.2+ | Symfony 7.4 LTS
-- **Banco de Dados**: PostgreSQL 16
-- **ORM**: Doctrine ORM + Doctrine Migrations
-- **Frontend**: Twig | Bootstrap 5 | Webpack Encore + Sass/SCSS
-- **Qualidade de Código**: PHPStan | PHP-CS-Fixer | Symfony Validator
-- **Testes**: PHPUnit
-- **Relatórios**: mPDF (geração de PDF a partir de views do banco)
-- **Ambiente**: Docker + Docker Compose | Composer | Git | Node.js (NPM)
+## Sobre o Projeto
+
+Sistema web para gerenciamento de cadastros de livros, permitindo o cadastro de **autores**, **assuntos** e **livros**, com relacionamentos ManyToMany entre as entidades. Inclui um módulo de **relatórios** com exportação em PDF e paginação.
+
+### Funcionalidades Principais
+
+- CRUD completo de Autores, Assuntos e Livros
+- Relacionamentos ManyToMany com seleção múltipla
+- Paginação com KnpPaginatorBundle
+- Feedback visual com SweetAlert2 (toasts e confirmações)
+- Validação em frontend (HTML5) e backend (Symfony Validator)
+- DataTransformer para formatação monetária brasileira (R$)
+- Relatório de livros por autor via View SQL + DBAL
+- Exportação do relatório em PDF (mPDF)
+- Fixtures com Faker para popular dados de teste
+- Testes automatizados (PHPUnit)
 
 ---
 
-## 📋 Pré-requisitos
+## Como Rodar o Projeto
 
-- Docker e Docker Compose instalados
-- PHP 8.2+ e Composer instalados localmente (ou uso total via Docker)
-- Node.js (v18 ou superior) e NPM instalados
-- Symfony CLI (opcional, mas recomendado)
+## Pré-requisitos
 
----
+- **Docker** e **Docker Compose** instalados
+- **Git** instalado
 
-## 🚀 Instalação e Configuração
+## Opção 1: Ambiente Híbrido (Usando o Docker apenas para isolar o banco de dados)
 
-Siga os passos abaixo para configurar e rodar o projeto localmente:
-
-### 1. Clonar o repositório
+**1. Clonar o repositório**
 ```bash
-git clone <url-do-repositorio>
-cd desafio-livros
+git clone https://github.com/murilobesse/teste_spassu.git
+cd teste_spassu
 ```
 
-### 2. Instalar dependências do PHP
+**2. Instalar dependências**
 ```bash
 composer install
-```
-
-### 3. Instalar dependências do Node.js e buildar os assets
-```bash
 npm install
-npm run dev
+npm run dev # Ou 'npm run watch' para desenvolvimento contínuo
 ```
-# Ou use 'npm run watch' para desenvolvimento contínuo
 
-### 4. Configurar o ambiente
-Copie o arquivo de exemplo e ajuste as variáveis de ambiente se necessário:
+**3. Configurar o ambiente**
 ```bash
-cp .env
+cp .env.example .env.local
 ```
-
-Certifique-se de que a DATABASE_URL no .env.local aponta para o container Docker do PostgreSQL:
+Certifique-se de que a `DATABASE_URL` no `.env.local` aponta para o container:
 ```env
 DATABASE_URL="postgresql://db_livros:!MinhaSenha123@127.0.0.1:5432/app?serverVersion=18&charset=utf8"
 ```
 
-### 5. Subir o banco de dados via Docker
+**4. Subir apenas o banco de dados via Docker**
 ```bash
 docker compose up -d
 ```
 
-### 6. Criar o banco de dados e aplicar as migrations
+**5. Criar o banco e aplicar migrations**
 ```bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-### 7. Rodar o servidor local
+**6. Popular com dados de teste (Opcional, mas recomendado)**
+```bash
+php bin/console doctrine:fixtures:load
+```
+
+**7. Rodar o servidor local**
 ```bash
 symfony server:start -d
 # Ou: php -S 127.0.0.1:8000 -t public
 ```
 
-Acesse a aplicação em: http://127.0.0.1:8000
+---
+
+## Opção 2: Ambiente 100% Dockerizado
+
+**1. Clonar o Repositório**
+
+```bash
+git clone https://github.com/murilobesse/teste-spassu.git
+cd teste-spassu
+```
+
+Certifique-se de que a `DATABASE_URL` no `.env.local` aponta para o container:
+```env
+DATABASE_URL="postgresql://app:!ChangeMe!@database:5432/app?serverVersion=18&charset=utf8"
+```
+
+**2. Subir todos os containers (usando o arquivo completo)**
+docker compose -f compose.full.yaml up -d
+
+Pronto! O `entrypoint.sh` do container PHP vai automaticamente:
+- Instalar dependências PHP (`composer install`)
+- Instalar dependências JavaScript (`npm install`)
+- Criar o banco de dados
+- Aplicar todas as migrations
+- Popular com dados de teste (fixtures)
+- Compilar os assets (`npm run dev`)
+
+**1. Acessar o Sistema**
+
+Abra no navegador: **http://localhost:8080**
 
 ---
 
-O modelo segue integralmente o UML fornecido, com chaves primárias nomeadas conforme a especificação:
+## 📝 Comandos Úteis
+
+```bash
+# Acessar o container PHP
+docker compose exec php bash
+
+# Ver logs do container
+docker compose logs -f php
+
+# Rodar testes
+docker compose exec php bin/phpunit
+
+# Limpar cache
+docker compose exec php bin/console cache:clear
 ```
-    autor: codAu (PK), nome
-    assunto: codAs (PK), descricao
-    livro: codl (PK), titulo, editora, edicao, anoPublicacao, valor
-    Livro_Autor: Tabela de junção N:N (Livro_Codl, Autor_CodAu)
-    Livro_Assunto: Tabela de junção N:N (Livro_Codl, Assunto_CodAs)
-```
-Observação: As colunas de chave primária e estrangeira foram explicitamente mapeadas no Doctrine (#[ORM\Column(name: '...')]) para garantir 100% de aderência ao UML, evitando o padrão automático id.
+
+---

@@ -77,8 +77,7 @@ php bin/console doctrine:fixtures:load
 
 **7. Rodar o servidor local**
 ```bash
-symfony server:start -d
-# Ou: php -S 127.0.0.1:8000 -t public
+php -S 127.0.0.1:8000 -t public
 ```
 
 ---

@@ -1,0 +1,9 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Mpdf\Mpdf:
+        arguments:
+            $config:
+                tempDir: '/tmp/mpdf'

@@ -16,6 +16,7 @@ final class AssuntoControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
+        
         $container = static::getContainer();
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $passwordHasher = $container->get('security.password_hasher');

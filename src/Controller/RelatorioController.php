@@ -8,82 +8,65 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 use Doctrine\DBAL\ParameterType;
 
-use Doctrine\DBAL\Connection;
+use App\Service\RelatorioService;
 
 class RelatorioController extends AbstractController
 {
     #[Route('/relatorio', name: 'app_relatorio_index', methods: ['GET'])]
     public function index(
         Request $request,
-        Connection $connection
+        RelatorioService $relatorioService
     ): Response {
         $limit = 10;
         $page = max(1, $request->query->getInt('page', 1));
 
-        $total = (int) $connection->fetchOne(
-            'SELECT COUNT(*) FROM vw_relatorio_livros_por_autor'
-        );
+        $relatorioCompleto = $relatorioService->getRelatorioAgrupadoPorAutor();
+        $total = $relatorioService->getTotalRegistros();
+
+        $relatorioPlano = [];
+        foreach ($relatorioCompleto as $autor => $livros) {
+            foreach ($livros as $livro) {
+                $relatorioPlano[] = $livro;
+            }
+        }
 
         $totalPages = max(1, (int) ceil($total / $limit));
         $page = min($page, $totalPages);
         $offset = ($page - 1) * $limit;
 
-        $sql = '
-            SELECT autor_nome, livro_titulo, livro_editora, livro_edicao, livro_ano, livro_valor
-            FROM vw_relatorio_livros_por_autor
-            ORDER BY autor_nome ASC, livro_titulo ASC
-            LIMIT :limit OFFSET :offset
-        ';
-
-        $relatorio = $connection->executeQuery(
-            $sql,
-            ['limit' => $limit, 'offset' => $offset],
-            ['limit' => ParameterType::INTEGER, 'offset' => ParameterType::INTEGER]
-        )->fetchAllAssociative();
+        $relatorioPaginado = array_slice($relatorioPlano, $offset, $limit);
 
         return $this->render('relatorio/index.html.twig', [
-            'relatorio'   => $relatorio,
-            'page'        => $page,
-            'totalPages'  => $totalPages,
-            'total'       => $total,
-            'limit'       => $limit,
+            'relatorio' => $relatorioPaginado,
+            'page' => $page,
+            'totalPages' => $totalPages,
+            'total' => $total,
+            'limit' => $limit,
         ]);
     }
 
     #[Route('/relatorio/pdf', name: 'app_relatorio_pdf', methods: ['GET'])]
-    public function pdf(Connection $connection): Response
+    public function pdf(RelatorioService $relatorioService): Response
     {
-        $sql = '
-            SELECT autor_nome, livro_titulo, livro_editora, livro_edicao, livro_ano, livro_valor
-            FROM vw_relatorio_livros_por_autor
-            ORDER BY autor_nome ASC, livro_titulo ASC
-        ';
+        $relatorio = $relatorioService->getRelatorioAgrupadoPorAutor();
 
-        $rows = $connection->executeQuery($sql)->fetchAllAssociative();
-        
-        $relatorioAgrupado = [];
-        foreach ($rows as $row) {
-            $autor = $row['autor_nome'];
-            if (!isset($relatorioAgrupado[$autor])) {
-                $relatorioAgrupado[$autor] = [];
-            }
-            $relatorioAgrupado[$autor][] = $row;
-        }
+        $totalAutores = count($relatorio);
+        $totalLivros = array_sum(array_map('count', $relatorio));
 
         $html = $this->renderView('relatorio/pdf.html.twig', [
-            'relatorio' => $relatorioAgrupado,
-            'totalAutores' => count($relatorioAgrupado),
-            'totalLivros' => count($rows),
+            'relatorio' => $relatorio,
+            'totalAutores' => $totalAutores,
+            'totalLivros' => $totalLivros,
             'dataGeracao' => date('d/m/Y H:i:s'),
         ]);
 
         $mpdf = new \Mpdf\Mpdf([
             'mode' => 'utf-8',
             'format' => 'A4',
-            'margin_left' => 10,
-            'margin_right' => 10,
-            'margin_top' => 10,
-            'margin_bottom' => 10,
+            'margin_left' => 15,
+            'margin_right' => 15,
+            'margin_top' => 20,
+            'margin_bottom' => 15,
         ]);
 
         $mpdf->SetTitle('Relatório de Livros por Autor');
@@ -91,8 +74,10 @@ class RelatorioController extends AbstractController
         
         $mpdf->WriteHTML($html);
 
+        $pdfContent = $mpdf->Output('relatorio_livros_autor.pdf',\Mpdf\Output\Destination::INLINE);
+
         return new Response(
-            $mpdf->Output('relatorio_livros_autor.pdf', \Mpdf\Output\Destination::INLINE),
+            $pdfContent,
             200,
             [
                 'Content-Type' => 'application/pdf',

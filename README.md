@@ -87,7 +87,7 @@ php -S 127.0.0.1:8000 -t public
 **1. Clonar o Repositório**
 
 ```bash
-git clone https://github.com/murilobesse/teste-spassu.git
+git clone https://github.com/murilobesse/teste_spassu.git
 cd teste-spassu
 ```
 

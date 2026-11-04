@@ -70,7 +70,7 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-**6. Popular com dados de teste (Opcional, mas recomendado)**
+**6. Popular com dados de teste**
 ```bash
 php bin/console doctrine:fixtures:load
 ```
@@ -78,6 +78,21 @@ php bin/console doctrine:fixtures:load
 **7. Rodar o servidor local**
 ```bash
 php -S 127.0.0.1:8000 -t public
+```
+
+Acesse com email: **admin@teste.com**
+senha: **123456**
+
+**8. Testes Automatizados**
+```bash
+# 1. Criar o banco de teste (apenas na primeira vez)
+docker compose exec database psql -U app -c "CREATE DATABASE app_test;"
+
+# 2. Aplicar migrations no ambiente de teste
+php bin/console doctrine:migrations:migrate --env=test
+
+# 3. Rodar os testes
+vendor/bin/phpunit
 ```
 
 ---
@@ -107,9 +122,26 @@ Pronto! O `entrypoint.sh` do container PHP vai automaticamente:
 - Popular com dados de teste (fixtures)
 - Compilar os assets (`npm run dev`)
 
-**1. Acessar o Sistema**
+
+**3. Acessar o Sistema**
 
 Abra no navegador: **http://localhost:8080**
+
+Acesse com email: **admin@teste.com**
+senha: **123456**
+
+**4. Testes Automatizados**
+
+```bash
+# 1. Criar o banco de teste (apenas na primeira vez)
+docker compose -f compose.full.yaml exec database psql -U app -c "CREATE DATABASE app_test;"
+
+# 2. Aplicar migrations no ambiente de teste
+docker compose -f compose.full.yaml exec php bin/console doctrine:migrations:migrate --env=test
+
+# 3. Rodar os testes (dentro do container PHP)
+docker compose -f compose.full.yaml exec php vendor/bin/phpunit
+```
 
 ---
 
@@ -123,10 +155,14 @@ docker compose exec php bash
 docker compose logs -f php
 
 # Rodar testes
-docker compose exec php bin/phpunit
+docker compose exec php vendor/bin/phpunit
+#ou
+php vendor/bin/phpunit
 
 # Limpar cache
 docker compose exec php bin/console cache:clear
+#ou
+php bin/console cache:clear
 ```
 
 ---

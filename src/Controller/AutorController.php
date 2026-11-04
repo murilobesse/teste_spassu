@@ -35,7 +35,7 @@ final class AutorController extends AbstractController
         $formEditar = $this->createForm(AutorType::class, new Autor())->createView();
 
         $queryBuilder = $autorRepository->createQueryBuilder('a')
-            ->orderBy('a.nome', SortDirection::Ascending);
+            ->orderBy('a.CodAu', SortDirection::Descending);
         $query = $queryBuilder->getQuery();
         $autors = $paginator->paginate(
             $query,

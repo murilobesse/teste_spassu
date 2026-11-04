@@ -179,6 +179,7 @@ final class LivroControllerTest extends WebTestCase
         $livro->setAnoPublicacao(1942);
 
         $livro->addAutor($autor);
+        $livro->addAutor($autor2);
         $livro->addAssunto($assunto);
 
         $entityManager->persist($livro);
@@ -186,9 +187,13 @@ final class LivroControllerTest extends WebTestCase
 
         $id = $livro->getCodL();
 
-        $crawler = $this->client->request('GET', '/livro/');
+        $livroCadastrado = $entityManager
+            ->getRepository(Livro::class)
+            ->find($id);
+        $this->assertNotNull($livroCadastrado);
 
-        $form = $crawler->selectButton('Excluir')->form();
+        $crawler = $this->client->request('GET', '/livro/');
+        $form = $crawler->filter('form[action="/livro/' . $id . '"]')->form();
         $token = $form->get('_token')->getValue();
 
         $this->client->request(

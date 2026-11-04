@@ -35,13 +35,14 @@ final class LivroController extends AbstractController
         $formEditar = $this->createForm(LivroType::class, new Livro())->createView();
 
         $queryBuilder = $livroRepository->createQueryBuilder('l')
-            ->orderBy('l.titulo', SortDirection::Ascending);
+            ->orderBy('l.codl', SortDirection::Descending);
         $query = $queryBuilder->getQuery();
         $livros = $paginator->paginate(
             $query,
             $request->query->getInt('page', 1),
             10
         );
+        
 
         return $this->render('livro/index.html.twig', [
             'livros' => $livros,

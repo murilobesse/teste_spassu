@@ -21,64 +21,35 @@ class TestFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $admin = new User();
-        $admin->setEmail('admin@teste.com');
-        $admin->setNome('Administrador');
-        $admin->setAtivo(true);
-        $admin->setRoles(['ROLE_ADMIN']);
-        $admin->setPassword($this->passwordHasher->hashPassword($admin, '123456'));
+        $admin = $this->createUser('admin@teste.com', 'Administrador', '123456', ['ROLE_ADMIN']);
         $manager->persist($admin);
 
-        $user = new User();
-        $user->setEmail('user@teste.com');
-        $user->setNome('Usuário');
-        $user->setAtivo(true);
-        $user->setRoles(['ROLE_USER']);
-        $user->setPassword($this->passwordHasher->hashPassword($user, '123456'));
+        $user = $this->createUser('user@teste.com', 'Usuário', '123456', ['ROLE_USER']);
         $manager->persist($user);
 
-        $autor1 = new Autor();
-        $autor1->setNome('Albert Camus');
+        $autor1 = $this->createAutor('Albert Camus');
         $manager->persist($autor1);
 
-        $autor2 = new Autor();
-        $autor2->setNome('Miguel de Cervantes');
+        $autor2 = $this->createAutor('Miguel de Cervantes');
         $manager->persist($autor2);
 
-        $assunto1 = new Assunto();
-        $assunto1->setDescricao('Ficção');
+        $assunto1 = $this->createAssunto('Ficção');
         $manager->persist($assunto1);
 
-        $assunto2 = new Assunto();
-        $assunto2->setDescricao('Romance');
+        $assunto2 = $this->createAssunto('Romance');
         $manager->persist($assunto2);
 
-        $livro1 = new Livro();
-        $livro1->setTitulo('O Estrangeiro');
-        $livro1->setEditora('Editora Record');
-        $livro1->setEdicao(1);
-        $livro1->setAnoPublicacao('1942');
-        $livro1->setValor(19.99);
+        $livro1 = $this->createLivro('O Estrangeiro', 'Editora Record', 1, '1942', 19.99);
         $livro1->addAutor($autor1);
         $livro1->addAssunto($assunto1);
         $manager->persist($livro1);
 
-        $livro2 = new Livro();
-        $livro2->setTitulo('Dom Quixote');
-        $livro2->setEditora('Editora');
-        $livro2->setEdicao(2);
-        $livro2->setAnoPublicacao('1605');
-        $livro2->setValor(35.78);
+        $livro2 = $this->createLivro('Dom Quixote', 'Editora', 2, '1605', 35.78);
         $livro2->addAutor($autor2);
         $livro2->addAssunto($assunto2);
         $manager->persist($livro2);
 
-        $livro3 = new Livro();
-        $livro3->setTitulo('Livro Teste 3');
-        $livro3->setEditora('Editora Teste');
-        $livro3->setEdicao(1);
-        $livro3->setAnoPublicacao('2022');
-        $livro3->setValor(51.99);
+        $livro3 = $this->createLivro('Livro Teste 3', 'Editora Teste', 1, '2022', 51.99);
         $livro3->addAutor($autor1);
         $livro3->addAutor($autor2);
         $livro3->addAssunto($assunto1);
@@ -86,5 +57,45 @@ class TestFixtures extends Fixture
         $manager->persist($livro3);
 
         $manager->flush();
+    }
+
+    private function createUser(string $email, string $nome, string $password, array $roles = ['ROLE_USER']): User
+    {
+        $user = new User();
+        $user->setEmail($email);
+        $user->setNome($nome);
+        $user->setAtivo(true);
+        $user->setRoles($roles);
+        $user->setPassword($this->passwordHasher->hashPassword($user, $password));
+
+        return $user;
+    }
+
+    private function createAutor(string $nome): Autor
+    {
+        $autor = new Autor();
+        $autor->setNome($nome);
+
+        return $autor;
+    }
+
+    private function createAssunto(string $descricao): Assunto
+    {
+        $assunto = new Assunto();
+        $assunto->setDescricao($descricao);
+
+        return $assunto;
+    }
+
+    private function createLivro(string $titulo, string $editora, int $edicao, string $anoPublicacao, float $valor): Livro
+    {
+        $livro = new Livro();
+        $livro->setTitulo($titulo);
+        $livro->setEditora($editora);
+        $livro->setEdicao($edicao);
+        $livro->setAnoPublicacao($anoPublicacao);
+        $livro->setValor($valor);
+
+        return $livro;
     }
 }

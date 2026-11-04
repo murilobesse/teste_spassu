@@ -24,9 +24,16 @@ php bin/console doctrine:database:create --if-not-exists --no-interaction || tru
 echo "🔄 Aplicando migrations..."
 php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
+echo "🧪 Configurando banco de testes..."
+php bin/console doctrine:database:create --env=test --if-not-exists --no-interaction || true
+php bin/console doctrine:migrations:migrate --env=test --no-interaction --allow-no-migration
+
 if [ "${APP_ENV:-dev}" != "prod" ]; then
     echo "📊 Carregando fixtures..."
     php bin/console doctrine:fixtures:load --no-interaction || true
+    
+    echo "📊 Carregando fixtures de teste..."
+    php bin/console doctrine:fixtures:load --env=test --no-interaction || true
 fi
 
 if [ -f "webpack.config.js" ]; then

@@ -35,7 +35,7 @@ final class AssuntoController extends AbstractController
         $formEditar = $this->createForm(AssuntoType::class, new Assunto())->createView();
 
         $queryBuilder = $assuntoRepository->createQueryBuilder('a')
-            ->orderBy('a.descricao', SortDirection::Ascending);
+            ->orderBy('a.CodAs', SortDirection::Descending);
         $query = $queryBuilder->getQuery();
         $assuntos = $paginator->paginate(
             $query,

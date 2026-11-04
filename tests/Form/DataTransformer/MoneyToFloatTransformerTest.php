@@ -5,7 +5,6 @@ namespace App\Tests\Form\DataTransformer;
 use App\Form\DataTransformer\MoneyToFloatTransformer;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-
 class MoneyToFloatTransformerTest extends TestCase
 {
     private MoneyToFloatTransformer $transformer;
@@ -15,6 +14,7 @@ class MoneyToFloatTransformerTest extends TestCase
         $this->transformer = new MoneyToFloatTransformer();
     }
 
+    // Testar Float para String | Do Banco para o Form
     #[DataProvider('floatToStringProvider')]
     public function testTransformFloatToString(?float $input, string $expected): void
     {
@@ -28,84 +28,30 @@ class MoneyToFloatTransformerTest extends TestCase
             'Float formatado para o padrão BR' => [1234.56, '1.234,56'],
             'Zero formatado com duas casas'   => [0.0, '0,00'],
             'Valor menor que um'              => [0.99, '0,99'],
+            'Valor grande com separador de milhar' => [1000000.0, '1.000.000,00'],
         ];
     }
 
-    // Testar Float para String | Do Banco para o Form
-    /*public function testTransformNullReturnsEmptyString(): void
-    {
-        $this->assertSame('', $this->transformer->transform(null));
-    }
-
-    public function testTransformFloatToBrazilianFormat(): void
-    {
-        $this->assertSame('1.234,56', $this->transformer->transform(1234.56));
-    }
-
-    public function testTransformZero(): void
-    {
-        $this->assertSame('0,00', $this->transformer->transform(0));
-    }
-
-    public function testTransformSmallValue(): void
-    {
-        $this->assertSame('0,99', $this->transformer->transform(0.99));
-    }
-
-    public function testTransformLargeValue(): void
-    {
-        $this->assertSame('1.000.000,00', $this->transformer->transform(1000000));
-    }*/
-
     // Testar String para Float | Do Form para o Banco
-    public function testReverseTransformNullReturnsNull(): void
+    #[DataProvider('stringToFloatProvider')]
+    public function testReverseTransformStringToFloat(?string $input, ?float $expected): void
     {
-        $this->assertNull($this->transformer->reverseTransform(null));
+        $this->assertSame($expected, $this->transformer->reverseTransform($input));
     }
 
-    public function testReverseTransformEmptyStringReturnsNull(): void
+    public static function stringToFloatProvider(): array
     {
-        $this->assertNull($this->transformer->reverseTransform(''));
+        return [
+            'Null deve retornar null' => [null, null],
+            'String vazia deve retornar null' => ['', null],
+            'Valor no formato brasileiro' => ['1.234,56', 1234.56],
+            'Valor sem separador de milhar' => ['59,90', 59.9],
+            'Valor com símbolo de moeda' => ['R$ 59,90', 59.9],
+            'Valor com espaços em branco' => [' 1.234,56 ', 1234.56],
+            'Valor inteiro' => ['100', 100.0],
+            'Valor grande com separador de milhar' => ['1.000.000,00', 1000000.0],
+            'String inválida deve retornar null' => ['abc', null],
+            'Apenas símbolo de moeda deve retornar null' => ['R$ ', null],
+        ];
     }
-
-    public function testReverseTransformBrazilianFormat(): void
-    {
-        $this->assertSame(1234.56, $this->transformer->reverseTransform('1.234,56'));
-    }
-
-    public function testReverseTransformWithoutThousands(): void
-    {
-        $this->assertSame(59.9, $this->transformer->reverseTransform('59,90'));
-    }
-
-    public function testReverseTransformWithCurrencySymbol(): void
-    {
-        $this->assertSame(59.9, $this->transformer->reverseTransform('R$ 59,90'));
-    }
-
-    public function testReverseTransformWithSpaces(): void
-    {
-        $this->assertSame(1234.56, $this->transformer->reverseTransform(' 1.234,56 '));
-    }
-
-    public function testReverseTransformIntegerValue(): void
-    {
-        $this->assertSame(100.0, $this->transformer->reverseTransform('100'));
-    }
-
-    public function testReverseTransformLargeValue(): void
-    {
-        $this->assertSame(1000000.0, $this->transformer->reverseTransform('1.000.000,00'));
-    }
-
-    public function testReverseTransformInvalidStringReturnsNull(): void
-    {
-        $this->assertNull($this->transformer->reverseTransform('abc'));
-    }
-
-    public function testReverseTransformOnlySymbolsReturnsNull(): void
-    {
-        $this->assertNull($this->transformer->reverseTransform('R$ '));
-    }
-
 }

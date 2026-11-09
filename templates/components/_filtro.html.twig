@@ -1,0 +1,26 @@
+{# templates/components/_filtro.html.twig #}
+<div class="mb-2">
+    <form method="GET" action="{{ path(route) }}" class="row g-2 justify-content-end">
+        <div class="col-md-5">
+            <input 
+                type="text" 
+                id="filtro" 
+                name="q" 
+                value="{{ termo }}"
+                class="form-control" 
+                placeholder="{{ placeholder }}"
+                autofocus
+            >
+        </div>
+        <div class="col-auto d-flex gap-2">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-search"></i> Filtrar
+            </button>
+            {% if termo %}
+                <a href="{{ path(route) }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-lg"></i> Limpar
+                </a>
+            {% endif %}
+        </div>
+    </form>
+</div>

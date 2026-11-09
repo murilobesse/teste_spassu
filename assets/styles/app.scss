@@ -1,6 +1,10 @@
 $primary: #0d6efd;
 
-@import "bootstrap/scss/bootstrap";
+//@import "bootstrap/scss/bootstrap";
+
+@import '~bootswatch/dist/sandstone/variables';
+@import '~bootstrap/scss/bootstrap';
+@import '~bootswatch/dist/sandstone/bootswatch';
 
 body {
     background-color: #f8f9fa;

@@ -16,6 +16,18 @@ class LivroRepository extends ServiceEntityRepository
         parent::__construct($registry, Livro::class);
     }
 
+    public function findByTitulo(?string $titulo = null): \Doctrine\ORM\QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('l');
+
+        if ($titulo) {
+            $qb->andWhere('LOWER(l.titulo) LIKE LOWER(:titulo)')
+            ->setParameter('titulo', "%$titulo%");
+        }
+
+        return $qb;
+    }
+
 //    /**
 //     * @return Livro[] Returns an array of Livro objects
 //     */

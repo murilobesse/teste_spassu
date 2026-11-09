@@ -16,6 +16,18 @@ class AssuntoRepository extends ServiceEntityRepository
         parent::__construct($registry, Assunto::class);
     }
 
+    public function findByDescricao(?string $descricao = null): \Doctrine\ORM\QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if ($descricao) {
+            $qb->andWhere('LOWER(a.descricao) LIKE LOWER(:descricao)')
+            ->setParameter('descricao', "%$descricao%");
+        }
+
+        return $qb;
+    }
+
 //    /**
 //     * @return Assunto[] Returns an array of Assunto objects
 //     */

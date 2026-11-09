@@ -21,6 +21,8 @@ final class AutorController extends AbstractController
     #[Route('/', name: 'app_autor_index', methods: ['GET'])]
     public function index(Request $request, AutorRepository $autorRepository, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
+        $termo = $request->query->get('q');
+        
         $novoAutor = new Autor();
         $formNovo = $this->createForm(AutorType::class, $novoAutor);
         $formNovo->handleRequest($request);
@@ -34,7 +36,7 @@ final class AutorController extends AbstractController
 
         $formEditar = $this->createForm(AutorType::class, new Autor())->createView();
 
-        $queryBuilder = $autorRepository->createQueryBuilder('a')
+        $queryBuilder = $autorRepository->findByNome($termo)
             ->orderBy('a.CodAu', SortDirection::Descending);
         $query = $queryBuilder->getQuery();
         $autors = $paginator->paginate(
@@ -47,6 +49,7 @@ final class AutorController extends AbstractController
             'autors' => $autors,
             'form_novo' => $formNovo->createView(),
             'form_editar' => $formEditar,
+            'termo' => $termo,
         ]);
     }
 

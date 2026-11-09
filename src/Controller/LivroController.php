@@ -21,6 +21,8 @@ final class LivroController extends AbstractController
     #[Route('/', name: 'app_livro_index', methods: ['GET'])]
     public function index(Request $request, LivroRepository $livroRepository, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
+        $termo = $request->query->get('q');
+
         $novoLivro = new Livro();
         $formNovo = $this->createForm(LivroType::class, $novoLivro);
         $formNovo->handleRequest($request);
@@ -34,7 +36,7 @@ final class LivroController extends AbstractController
 
         $formEditar = $this->createForm(LivroType::class, new Livro())->createView();
 
-        $queryBuilder = $livroRepository->createQueryBuilder('l')
+        $queryBuilder = $livroRepository->findByTitulo($termo)
             ->orderBy('l.codl', SortDirection::Descending);
         $query = $queryBuilder->getQuery();
         $livros = $paginator->paginate(
@@ -48,6 +50,7 @@ final class LivroController extends AbstractController
             'livros' => $livros,
             'form_novo' => $formNovo->createView(),
             'form_editar' => $formEditar,
+            'termo' => $termo,
         ]);
     }
 

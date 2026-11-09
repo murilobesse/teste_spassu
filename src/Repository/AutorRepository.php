@@ -16,6 +16,18 @@ class AutorRepository extends ServiceEntityRepository
         parent::__construct($registry, Autor::class);
     }
 
+    public function findByNome(?string $nome = null): \Doctrine\ORM\QueryBuilder
+    {
+        $qb = $this->createQueryBuilder('a');
+
+        if ($nome) {
+            $qb->andWhere('LOWER(a.nome) LIKE LOWER(:nome)')
+            ->setParameter('nome', "%$nome%");
+        }
+
+        return $qb;
+    }
+
 //    /**
 //     * @return Autor[] Returns an array of Autor objects
 //     */

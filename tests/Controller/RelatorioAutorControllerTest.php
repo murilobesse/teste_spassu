@@ -36,8 +36,7 @@ class RelatorioAutorControllerTest extends WebTestCase
         $this->client->request('GET', '/relatorio/autor/pdf');
 
         $this->assertResponseIsSuccessful();
-
-        $this->assertResponseIsSuccessful();
+        
         $this->assertResponseHeaderSame('content-type', 'application/pdf');
     }
 

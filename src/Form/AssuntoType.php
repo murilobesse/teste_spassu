@@ -4,13 +4,15 @@ namespace App\Form;
 
 use App\Entity\Assunto;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @extends AbstractType<Assunto>
+ */
 class AssuntoType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -21,13 +23,13 @@ class AssuntoType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: Distopia',
-                    'required' => true
+                    'required' => true,
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlank(message: 'A descrição do assunto é obrigatória.'),
-                    new Length(max: 40, maxMessage: 'A descrição não pode ter mais de 40 caracteres.')
-                ]
+                    new Length(max: 40, maxMessage: 'A descrição não pode ter mais de 40 caracteres.'),
+                ],
             ])
         ;
     }

@@ -2,23 +2,22 @@
 
 namespace App\Controller;
 
+use App\Service\RelatorioService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
-use App\Service\RelatorioService;
 
 class RelatorioAssuntoController extends AbstractController
 {
     #[Route('/relatorio/assunto', name: 'app_relatorio_assunto', methods: ['GET'])]
     public function index(
         Request $request,
-        RelatorioService $relatorioService
+        RelatorioService $relatorioService,
     ): Response {
         $limit = 10;
         $page = max(1, $request->query->getInt('page', 1));
-        
+
         $relatorioCompleto = $relatorioService->getRelatorioAgrupadoPorAssunto();
         $total = $relatorioService->getTotalRegistrosAssunto();
 
@@ -68,14 +67,13 @@ class RelatorioAssuntoController extends AbstractController
             'margin_bottom' => 15,
             'tempDir' => '/tmp/mpdf',
         ]);
-        
 
         $mpdf->SetTitle('Relatório de Livros por Assunto');
         $mpdf->SetAuthor('Sistema de Gestão de Livros');
-        
+
         $mpdf->WriteHTML($html);
 
-        $pdfContent = $mpdf->Output('relatorio_livros_assunto.pdf',\Mpdf\Output\Destination::INLINE);
+        $pdfContent = $mpdf->Output('relatorio_livros_assunto.pdf', \Mpdf\Output\Destination::INLINE);
 
         return new Response(
             $pdfContent,

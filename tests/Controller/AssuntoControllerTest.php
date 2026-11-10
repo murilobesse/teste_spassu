@@ -2,12 +2,12 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
 use App\Entity\Assunto;
+use App\Entity\User;
 use App\Repository\AssuntoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AssuntoControllerTest extends WebTestCase
 {
@@ -16,7 +16,7 @@ final class AssuntoControllerTest extends WebTestCase
     protected function setUp(): void
     {
         $this->client = static::createClient();
-        
+
         $container = static::getContainer();
         $entityManager = $container->get('doctrine.orm.entity_manager');
         $passwordHasher = $container->get('security.password_hasher');
@@ -39,7 +39,7 @@ final class AssuntoControllerTest extends WebTestCase
         $this->client->request('GET', '/assunto/');
         $this->assertResponseIsSuccessful();
 
-        $this->assertSelectorTextContains('h1','Lista de Assuntos');
+        $this->assertSelectorTextContains('h1', 'Lista de Assuntos');
     }
 
     public function testInsertAssunto(): void
@@ -78,19 +78,19 @@ final class AssuntoControllerTest extends WebTestCase
 
         $this->client->request(
             'POST',
-            '/assunto/' . $id . '/editar',
+            '/assunto/'.$id.'/editar',
             [
                 'assunto' => [
                     'descricao' => 'Ficção Edit',
                     '_token' => $token,
-                ]
+                ],
             ]
         );
 
         $this->assertResponseRedirects('/assunto/');
 
         $entityManager->clear();
-        
+
         $assuntoAtualizado = $entityManager->getRepository(Assunto::class)->find($id);
 
         $this->assertSame('Ficção Edit', $assuntoAtualizado->getDescricao());
@@ -114,14 +114,14 @@ final class AssuntoControllerTest extends WebTestCase
 
         $this->client->request(
             'POST',
-            '/assunto/' . $id,
+            '/assunto/'.$id,
             [
-                '_token' => $token
+                '_token' => $token,
             ]
         );
 
         $this->assertResponseRedirects('/assunto/');
-        
+
         $entityManager->clear();
 
         $assuntoExcluido = $entityManager
@@ -140,7 +140,7 @@ final class AssuntoControllerTest extends WebTestCase
         ]);
 
         $this->client->submit($form);
-        
+
         $assunto = static::getContainer()
             ->get(AssuntoRepository::class)
             ->findOneBy(['descricao' => '']);

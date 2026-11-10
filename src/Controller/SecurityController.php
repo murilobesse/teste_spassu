@@ -13,7 +13,7 @@ final class SecurityController extends AbstractController
     #[Route('/login', name: 'app_login', methods: ['GET', 'POST'])]
     public function login(AuthenticationUtils $authenticationUtils, TranslatorInterface $translator): Response
     {
-        if($this->getUser()){
+        if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
 
@@ -31,13 +31,12 @@ final class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername
+            'last_username' => $lastUsername,
         ]);
     }
 
     #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
-        
     }
 }

@@ -4,10 +4,13 @@ namespace App\Form\DataTransformer;
 
 use Symfony\Component\Form\DataTransformerInterface;
 
+/**
+ * @implements DataTransformerInterface<float|null, string>
+ */
 class MoneyToFloatTransformer implements DataTransformerInterface
 {
     /**
-     * Converter o valor do Banco (Float) para o Formulário (String com vírgula)
+     * Converter o valor do Banco (Float) para o Formulário (String com vírgula).
      */
     public function transform($value): string
     {
@@ -19,7 +22,7 @@ class MoneyToFloatTransformer implements DataTransformerInterface
     }
 
     /**
-     * Converter o valor do Formulário (String com vírgula) para o Banco (Float)
+     * Converter o valor do Formulário (String com vírgula) para o Banco (Float).
      */
     public function reverseTransform($value): ?float
     {
@@ -28,12 +31,12 @@ class MoneyToFloatTransformer implements DataTransformerInterface
         }
 
         $value = preg_replace('/[^0-9,\.]/', '', $value);
-        
+
         if (empty($value)) {
             return null;
         }
 
-        if (strpos($value, ',') !== false) {
+        if (false !== strpos($value, ',')) {
             $value = str_replace('.', '', $value); // Remove pontos de milhar
             $value = str_replace(',', '.', $value); // Troca vírgula por ponto
         }

@@ -145,6 +145,20 @@ docker compose -f compose.full.yaml exec php vendor/bin/phpunit
 
 ---
 
+## Qualidade de Código
+
+```bash
+composer test       # testes (PHPUnit)
+composer analyse    # análise estática (PHPStan, nível 6)
+composer cs-check   # verifica o padrão de código, sem alterar arquivos
+composer cs-fix     # aplica as correções do PHP-CS-Fixer
+composer lint       # roda tudo: análise + padrão + testes
+```
+
+Em Docker, prefixe com `docker compose -f compose.full.yaml exec php`.
+
+---
+
 ## 📝 Comandos Úteis
 
 ```bash

@@ -3,8 +3,9 @@
 namespace App\Tests\Form\DataTransformer;
 
 use App\Form\DataTransformer\MoneyToFloatTransformer;
-use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+
 class MoneyToFloatTransformerTest extends TestCase
 {
     private MoneyToFloatTransformer $transformer;
@@ -21,13 +22,16 @@ class MoneyToFloatTransformerTest extends TestCase
         $this->assertSame($expected, $this->transformer->transform($input));
     }
 
+    /**
+     * @return array<string, array{float|null, string}>
+     */
     public static function floatToStringProvider(): array
     {
         return [
             'Null deve retornar string vazia' => [null, ''],
             'Float formatado para o padrão BR' => [1234.56, '1.234,56'],
-            'Zero formatado com duas casas'   => [0.0, '0,00'],
-            'Valor menor que um'              => [0.99, '0,99'],
+            'Zero formatado com duas casas' => [0.0, '0,00'],
+            'Valor menor que um' => [0.99, '0,99'],
             'Valor grande com separador de milhar' => [1000000.0, '1.000.000,00'],
         ];
     }
@@ -39,6 +43,9 @@ class MoneyToFloatTransformerTest extends TestCase
         $this->assertSame($expected, $this->transformer->reverseTransform($input));
     }
 
+    /**
+     * @return array<string, array{string|null, float|null}>
+     */
     public static function stringToFloatProvider(): array
     {
         return [

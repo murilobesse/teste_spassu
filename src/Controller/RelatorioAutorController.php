@@ -2,20 +2,18 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\DBAL\ParameterType;
-
 use App\Service\RelatorioService;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 class RelatorioAutorController extends AbstractController
 {
     #[Route('/relatorio/autor', name: 'app_relatorio_autor', methods: ['GET'])]
     public function index(
         Request $request,
-        RelatorioService $relatorioService
+        RelatorioService $relatorioService,
     ): Response {
         $limit = 10;
         $page = max(1, $request->query->getInt('page', 1));
@@ -69,14 +67,13 @@ class RelatorioAutorController extends AbstractController
             'margin_bottom' => 15,
             'tempDir' => '/tmp/mpdf',
         ]);
-        
 
         $mpdf->SetTitle('Relatório de Livros por Autor');
         $mpdf->SetAuthor('Sistema de Gestão de Livros');
-        
+
         $mpdf->WriteHTML($html);
 
-        $pdfContent = $mpdf->Output('relatorio_livros_autor.pdf',\Mpdf\Output\Destination::INLINE);
+        $pdfContent = $mpdf->Output('relatorio_livros_autor.pdf', \Mpdf\Output\Destination::INLINE);
 
         return new Response(
             $pdfContent,

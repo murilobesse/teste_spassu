@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\AutorRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AutorRepository::class)]
 class Autor
@@ -18,6 +18,7 @@ class Autor
     #[ORM\Column(length: 40)]
     private ?string $nome = null;
 
+    /** @var Collection<int, Livro> */
     #[ORM\ManyToMany(targetEntity: Livro::class, mappedBy: 'autores')]
     private Collection $livros;
 
@@ -50,6 +51,7 @@ class Autor
         return $this;
     }
 
+    /** @return Collection<int, Livro> */
     public function getLivros(): Collection
     {
         return $this->livros;

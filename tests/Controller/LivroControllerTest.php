@@ -2,14 +2,13 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
-use App\Entity\Livro;
-use App\Repository\LivroRepository;
-use App\Entity\Autor;
 use App\Entity\Assunto;
+use App\Entity\Autor;
+use App\Entity\Livro;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class LivroControllerTest extends WebTestCase
 {
@@ -40,7 +39,7 @@ final class LivroControllerTest extends WebTestCase
         $this->client->request('GET', '/livro/');
         $this->assertResponseIsSuccessful();
 
-        $this->assertSelectorTextContains('h1','Lista de Livros');
+        $this->assertSelectorTextContains('h1', 'Lista de Livros');
     }
 
     public function testInsertLivro(): void
@@ -101,13 +100,13 @@ final class LivroControllerTest extends WebTestCase
         $assunto = new Assunto();
         $assunto->setDescricao('Ficção');
         $entityManager->persist($assunto);
-        
+
         $livro = new Livro();
         $livro->setTitulo('O Estrangeiro');
         $livro->setEditora('Editora Record');
         $livro->setEdicao(1);
-        $livro->setValor('19.90');
-        $livro->setAnoPublicacao(1942);
+        $livro->setValor(19.90);
+        $livro->setAnoPublicacao('1942');
 
         $livro->addAutor($autor);
         $livro->addAssunto($assunto);
@@ -125,7 +124,7 @@ final class LivroControllerTest extends WebTestCase
 
         $this->client->request(
             'POST',
-            '/livro/' . $id . '/editar',
+            '/livro/'.$id.'/editar',
             [
                 'livro' => [
                     'titulo' => 'O Estrangeiro - Editado',
@@ -136,7 +135,7 @@ final class LivroControllerTest extends WebTestCase
                     'autores' => [$autor->getCodAu(), $autor2->getCodAu()],
                     'assuntos' => [$assunto->getCodAs()],
                     '_token' => $token,
-                ]
+                ],
             ]
         );
 
@@ -170,13 +169,13 @@ final class LivroControllerTest extends WebTestCase
         $assunto = new Assunto();
         $assunto->setDescricao('Ficção');
         $entityManager->persist($assunto);
-        
+
         $livro = new Livro();
         $livro->setTitulo('O Estrangeiro');
         $livro->setEditora('Editora Record');
         $livro->setEdicao(1);
-        $livro->setValor('19.90');
-        $livro->setAnoPublicacao(1942);
+        $livro->setValor(19.90);
+        $livro->setAnoPublicacao('1942');
 
         $livro->addAutor($autor);
         $livro->addAutor($autor2);
@@ -193,19 +192,19 @@ final class LivroControllerTest extends WebTestCase
         $this->assertNotNull($livroCadastrado);
 
         $crawler = $this->client->request('GET', '/livro/');
-        $form = $crawler->filter('form[action="/livro/' . $id . '"]')->form();
+        $form = $crawler->filter('form[action="/livro/'.$id.'"]')->form();
         $token = $form->get('_token')->getValue();
 
         $this->client->request(
             'POST',
-            '/livro/' . $id,
+            '/livro/'.$id,
             [
-                '_token' => $token
+                '_token' => $token,
             ]
         );
 
         $this->assertResponseRedirects('/livro/');
-        
+
         $entityManager->clear();
 
         $livroExcluido = $entityManager

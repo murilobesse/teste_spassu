@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\LivroRepository;
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LivroRepository::class)]
 class Livro
@@ -28,14 +28,16 @@ class Livro
     private ?string $anoPublicacao = null;
 
     #[ORM\Column(type: 'decimal', precision: 15, scale: 2)]
-    private ?string $valor = null;
+    private ?float $valor = null;
 
+    /** @var Collection<int, Autor> */
     #[ORM\ManyToMany(targetEntity: Autor::class, inversedBy: 'livros')]
     #[ORM\JoinTable(name: 'Livro_Autor')]
     #[ORM\JoinColumn(name: 'Livro_Codl', referencedColumnName: 'codl', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'Autor_CodAu', referencedColumnName: 'codAu')]
     private Collection $autores;
 
+    /** @var Collection<int, Assunto> */
     #[ORM\ManyToMany(targetEntity: Assunto::class, inversedBy: 'livros')]
     #[ORM\JoinTable(name: 'Livro_Assunto')]
     #[ORM\JoinColumn(name: 'Livro_Codl', referencedColumnName: 'codl', onDelete: 'CASCADE')]
@@ -116,9 +118,11 @@ class Livro
     public function setValor(float $valor): static
     {
         $this->valor = $valor;
+
         return $this;
     }
 
+    /** @return Collection<int, Autor> */
     public function getAutores(): Collection
     {
         return $this->autores;
@@ -129,15 +133,18 @@ class Livro
         if (!$this->autores->contains($autor)) {
             $this->autores->add($autor);
         }
+
         return $this;
     }
 
     public function removeAutor(Autor $autor): static
     {
         $this->autores->removeElement($autor);
+
         return $this;
     }
 
+    /** @return Collection<int, Assunto> */
     public function getAssuntos(): Collection
     {
         return $this->assuntos;
@@ -148,12 +155,14 @@ class Livro
         if (!$this->assuntos->contains($assunto)) {
             $this->assuntos->add($assunto);
         }
+
         return $this;
     }
 
     public function removeAssunto(Assunto $assunto): static
     {
         $this->assuntos->removeElement($assunto);
+
         return $this;
     }
 }

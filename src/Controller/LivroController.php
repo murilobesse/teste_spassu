@@ -2,18 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-
 use App\Entity\Livro;
 use App\Form\LivroType;
 use App\Repository\LivroRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use SortDirection;
-
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/livro')]
 final class LivroController extends AbstractController
@@ -33,6 +30,7 @@ final class LivroController extends AbstractController
             $entityManager->persist($novoLivro);
             $entityManager->flush();
             $this->addFlash('success', 'Livro criado com sucesso!');
+
             return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -45,7 +43,6 @@ final class LivroController extends AbstractController
             $request->query->getInt('page', 1),
             10
         );
-        
 
         return $this->render('livro/index.html.twig', [
             'livros' => $livros,
@@ -69,18 +66,18 @@ final class LivroController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Livro criado com sucesso!');
+
             return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            $errors = $form->getErrors(true); 
-            $errorMessages = [];
-            
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-            
-            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
-            $this->addFlash('error', 'Erro ao criar livro: ' . $mensagemErro);
         }
+        $errors = $form->getErrors(true);
+        $errorMessages = [];
+
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getMessage();
+        }
+
+        $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+        $this->addFlash('error', 'Erro ao criar livro: '.$mensagemErro);
 
         return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -101,18 +98,18 @@ final class LivroController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Livro atualizado com sucesso!');
+
             return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            $errors = $form->getErrors(true); 
-            $errorMessages = [];
-            
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-            
-            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
-            $this->addFlash('error', 'Erro ao editar livro: ' . $mensagemErro);
         }
+        $errors = $form->getErrors(true);
+        $errorMessages = [];
+
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getMessage();
+        }
+
+        $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+        $this->addFlash('error', 'Erro ao editar livro: '.$mensagemErro);
 
         return $this->redirectToRoute('app_livro_index', [], Response::HTTP_SEE_OTHER);
     }

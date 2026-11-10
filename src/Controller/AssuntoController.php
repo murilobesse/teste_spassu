@@ -22,6 +22,8 @@ final class AssuntoController extends AbstractController
     public function index(Request $request, AssuntoRepository $assuntoRepository, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
         $termo = $request->query->get('q');
+        $sort = $request->query->get('sortBy', 'codas');
+        $order = $request->query->get('sortDir', 'desc');
 
         $novoAssunto = new Assunto();
         $formNovo = $this->createForm(AssuntoType::class, $novoAssunto);
@@ -36,8 +38,7 @@ final class AssuntoController extends AbstractController
 
         $formEditar = $this->createForm(AssuntoType::class, new Assunto())->createView();
 
-        $queryBuilder = $assuntoRepository->findByDescricao($termo)
-            ->orderBy('a.CodAs', SortDirection::Descending);
+        $queryBuilder = $assuntoRepository->findByDescricao($termo, $sort, $order);
         $query = $queryBuilder->getQuery();
         $assuntos = $paginator->paginate(
             $query,
@@ -50,6 +51,8 @@ final class AssuntoController extends AbstractController
             'form_novo' => $formNovo->createView(),
             'form_editar' => $formEditar,
             'termo' => $termo,
+            'currentSort' => $sort,
+            'currentOrder' => strtolower($order),
         ]);
     }
 

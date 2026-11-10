@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Autor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Autor>
@@ -16,14 +17,33 @@ class AutorRepository extends ServiceEntityRepository
         parent::__construct($registry, Autor::class);
     }
 
-    public function findByNome(?string $nome = null): \Doctrine\ORM\QueryBuilder
+    public function findByNome(
+        ?string $nome = null, 
+        string $sort = 'codau', 
+        string $order = 'desc'
+        ): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createQueryBuilder('a');
+
+        $allowedSorts = ['codau' => 'a.CodAu', 'nome' => 'a.nome'];
+        $sortField = $allowedSorts[strtolower($sort)] ?? 'a.CodAu';
+        
+        switch (strtolower($order)) {
+            case 'asc':
+                $order = SortDirection::Ascending;
+                break;
+            case 'desc':
+                $order = SortDirection::Descending;
+                break;
+            default:
+                $order = SortDirection::Descending;
+        }
 
         if ($nome) {
             $qb->andWhere('LOWER(a.nome) LIKE LOWER(:nome)')
             ->setParameter('nome', "%$nome%");
         }
+        $qb->addOrderBy($sortField, $order);
 
         return $qb;
     }

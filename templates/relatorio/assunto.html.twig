@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relatório de Livros por Assunto{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Relatório de Livros por Assunto</h1>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body table-responsive rounded p-0">
+            <table class="table table-hover table-striped mb-0">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Assunto</th>
+                        <th>Título</th>
+                        <th>Editora</th>
+                        <th>Edição</th>
+                        <th>Ano</th>
+                        <th class="text-end">Valor (R$)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in relatorio %}
+                    <tr>
+                        <td>{{ row.assunto_descricao }}</td>
+                        <td>{{ row.livro_titulo }}</td>
+                        <td>{{ row.livro_editora }}</td>
+                        <td>{{ row.livro_edicao }}</td>
+                        <td>{{ row.livro_ano }}</td>
+                        <td class="text-end">{{ row.livro_valor|number_format(2, ',', '.') }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">Nenhum registro encontrado.</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <small class="text-muted">
+            {{ total }} Resultados | Página {{ page }} de {{ totalPages }}
+        </small>
+
+        <a href="{{ path('app_relatorio_assunto_pdf') }}" target="_blank" class="btn btn-danger btn-sm">
+            Exportar PDF
+        </a>
+    </div>
+
+    {% if totalPages > 1 %}
+        <nav aria-label="Paginação do relatório" class="mt-4">
+            <ul class="pagination justify-content-center">
+
+                {# Anterior #}
+                <li class="page-item {{ page == 1 ? 'disabled' : '' }}">
+                    <a class="page-link"
+                       href="{{ path('app_relatorio_assunto', {page: page - 1}) }}">&laquo; Anterior</a>
+                </li>
+
+                {# Números das páginas #}
+                {% for p in 1..totalPages %}
+                    <li class="page-item {{ p == page ? 'active' : '' }}">
+                        <a class="page-link"
+                           href="{{ path('app_relatorio_assunto', {page: p}) }}">{{ p }}</a>
+                    </li>
+                {% endfor %}
+
+                {# Próximo #}
+                <li class="page-item {{ page == totalPages ? 'disabled' : '' }}">
+                    <a class="page-link"
+                       href="{{ path('app_relatorio_assunto', {page: page + 1}) }}">Próximo &raquo;</a>
+                </li>
+
+            </ul>
+        </nav>
+    {% endif %}
+</div>
+{% endblock %}

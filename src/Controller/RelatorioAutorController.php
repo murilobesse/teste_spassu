@@ -10,9 +10,9 @@ use Doctrine\DBAL\ParameterType;
 
 use App\Service\RelatorioService;
 
-class RelatorioController extends AbstractController
+class RelatorioAutorController extends AbstractController
 {
-    #[Route('/relatorio', name: 'app_relatorio_index', methods: ['GET'])]
+    #[Route('/relatorio/autor', name: 'app_relatorio_autor', methods: ['GET'])]
     public function index(
         Request $request,
         RelatorioService $relatorioService
@@ -21,7 +21,7 @@ class RelatorioController extends AbstractController
         $page = max(1, $request->query->getInt('page', 1));
 
         $relatorioCompleto = $relatorioService->getRelatorioAgrupadoPorAutor();
-        $total = $relatorioService->getTotalRegistros();
+        $total = $relatorioService->getTotalRegistrosAutor();
 
         $relatorioPlano = [];
         foreach ($relatorioCompleto as $autor => $livros) {
@@ -36,7 +36,7 @@ class RelatorioController extends AbstractController
 
         $relatorioPaginado = array_slice($relatorioPlano, $offset, $limit);
 
-        return $this->render('relatorio/index.html.twig', [
+        return $this->render('relatorio/autor.html.twig', [
             'relatorio' => $relatorioPaginado,
             'page' => $page,
             'totalPages' => $totalPages,
@@ -45,7 +45,7 @@ class RelatorioController extends AbstractController
         ]);
     }
 
-    #[Route('/relatorio/pdf', name: 'app_relatorio_pdf', methods: ['GET'])]
+    #[Route('/relatorio/autor/pdf', name: 'app_relatorio_autor_pdf', methods: ['GET'])]
     public function pdf(RelatorioService $relatorioService): Response
     {
         $relatorio = $relatorioService->getRelatorioAgrupadoPorAutor();
@@ -53,7 +53,7 @@ class RelatorioController extends AbstractController
         $totalAutores = count($relatorio);
         $totalLivros = array_sum(array_map('count', $relatorio));
 
-        $html = $this->renderView('relatorio/pdf.html.twig', [
+        $html = $this->renderView('relatorio/autor/pdf.html.twig', [
             'relatorio' => $relatorio,
             'totalAutores' => $totalAutores,
             'totalLivros' => $totalLivros,

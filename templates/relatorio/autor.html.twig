@@ -46,7 +46,7 @@
             {{ total }} Resultados | Página {{ page }} de {{ totalPages }}
         </small>
 
-        <a href="{{ path('app_relatorio_pdf') }}" target="_blank" class="btn btn-danger btn-sm">
+        <a href="{{ path('app_relatorio_autor_pdf') }}" target="_blank" class="btn btn-danger btn-sm">
             Exportar PDF
         </a>
     </div>
@@ -58,21 +58,21 @@
                 {# Anterior #}
                 <li class="page-item {{ page == 1 ? 'disabled' : '' }}">
                     <a class="page-link"
-                       href="{{ path('app_relatorio_index', {page: page - 1}) }}">&laquo; Anterior</a>
+                       href="{{ path('app_relatorio_autor', {page: page - 1}) }}">&laquo; Anterior</a>
                 </li>
 
                 {# Números das páginas #}
                 {% for p in 1..totalPages %}
                     <li class="page-item {{ p == page ? 'active' : '' }}">
                         <a class="page-link"
-                           href="{{ path('app_relatorio_index', {page: p}) }}">{{ p }}</a>
+                           href="{{ path('app_relatorio_autor', {page: p}) }}">{{ p }}</a>
                     </li>
                 {% endfor %}
 
                 {# Próximo #}
                 <li class="page-item {{ page == totalPages ? 'disabled' : '' }}">
                     <a class="page-link"
-                       href="{{ path('app_relatorio_index', {page: page + 1}) }}">Próximo &raquo;</a>
+                       href="{{ path('app_relatorio_autor', {page: page + 1}) }}">Próximo &raquo;</a>
                 </li>
 
             </ul>

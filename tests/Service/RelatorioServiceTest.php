@@ -113,7 +113,7 @@ class RelatorioServiceTest extends TestCase
             ->method('fetchOne')
             ->willReturn('4');
 
-        $total = $this->service->getTotalRegistros();
+        $total = $this->service->getTotalRegistrosAutor();
 
         $this->assertSame(4, $total);
     }
@@ -124,7 +124,7 @@ class RelatorioServiceTest extends TestCase
             ->method('fetchOne')
             ->willReturn('0');
 
-        $total = $this->service->getTotalRegistros();
+        $total = $this->service->getTotalRegistrosAutor();
 
         $this->assertSame(0, $total);
     }

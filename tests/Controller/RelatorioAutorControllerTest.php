@@ -6,7 +6,7 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class RelatorioControllerTest extends WebTestCase
+class RelatorioAutorControllerTest extends WebTestCase
 {
     private KernelBrowser $client;
 
@@ -33,7 +33,7 @@ class RelatorioControllerTest extends WebTestCase
 
     public function testPdfEndpointReturnsPdf(): void
     {
-        $this->client->request('GET', '/relatorio/pdf');
+        $this->client->request('GET', '/relatorio/autor/pdf');
 
         $this->assertResponseIsSuccessful();
 
@@ -43,7 +43,7 @@ class RelatorioControllerTest extends WebTestCase
 
     public function testIndexEndpointReturnsHtml(): void
     {
-        $this->client->request('GET', '/relatorio');
+        $this->client->request('GET', '/relatorio/autor');
 
         $this->assertResponseIsSuccessful();
         $this->assertSelectorTextContains('h1','Relatório de Livros por Autor');

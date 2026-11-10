@@ -21,8 +21,25 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ path('app_livro_index') }}">Livros</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_relatorio_index') }}">Relatório</a>
+                    <!--li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_relatorio_autor') }}">Relatório</a>
+                    </li-->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="relatoriosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-bar-chart"></i> Relatórios
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="relatoriosDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_relatorio_autor') }}">
+                                    <i class="bi bi-person-lines-fill text-primary"></i> Livros por Autor
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{{ path('app_relatorio_assunto') }}">
+                                    <i class="bi bi-tags-fill text-success"></i> Livros por Assunto
+                                </a>
+                            </li>
+                        </ul>
                     </li>
 
                     {% if is_granted('ROLE_ADMIN') %}

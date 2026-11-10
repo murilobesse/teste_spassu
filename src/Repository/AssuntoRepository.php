@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Assunto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Assunto>
@@ -16,14 +17,34 @@ class AssuntoRepository extends ServiceEntityRepository
         parent::__construct($registry, Assunto::class);
     }
 
-    public function findByDescricao(?string $descricao = null): \Doctrine\ORM\QueryBuilder
+    public function findByDescricao(
+        ?string $descricao = null, 
+        string $sort = 'codau', 
+        string $order = 'desc'
+    ): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createQueryBuilder('a');
+
+        $allowedSorts = ['codau' => 'a.CodAs', 'nome' => 'a.nome'];
+        $sortField = $allowedSorts[strtolower($sort)] ?? 'a.CodAs';
+        
+        switch (strtolower($order)) {
+            case 'asc':
+                $order = SortDirection::Ascending;
+                break;
+            case 'desc':
+                $order = SortDirection::Descending;
+                break;
+            default:
+                $order = SortDirection::Descending;
+        }
 
         if ($descricao) {
             $qb->andWhere('LOWER(a.descricao) LIKE LOWER(:descricao)')
             ->setParameter('descricao', "%$descricao%");
         }
+
+        $qb->addOrderBy($sortField, $order);
 
         return $qb;
     }

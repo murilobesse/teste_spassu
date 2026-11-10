@@ -1,0 +1,19 @@
+{# 
+  Uso: {% import 'components/_sortable_header.html.twig' as sort %}
+  {{ sort.header('nome', 'Nome', currentSort, currentOrder, 'app_autor_index') }}
+#}
+
+{% macro header(field, label, currentSort, currentOrder, route) %}
+    {% set newOrder = (currentSort == field and currentOrder == 'asc') ? 'desc' : 'asc' %}
+    {% set icon = 'bi-arrow-down-up text-muted opacity-50' %}
+
+    {% if currentSort == field %}
+        {% set icon = (currentOrder == 'asc' ? 'bi-sort-down-alt' : 'bi-sort-down') ~ ' text-info' %}
+    {% endif %}
+
+    <a href="{{ path(route, app.request.query.all|merge({sortBy: field, sortDir: newOrder, page: 1})) }}"
+       class="text-decoration-none text-white d-inline-flex align-items-center gap-1">
+        {{ label }} <i class="bi {{ icon }}"></i>
+    </a>
+{% endmacro %}
+

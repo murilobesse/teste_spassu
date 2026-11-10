@@ -11,7 +11,7 @@ use App\Entity\Autor;
 use App\Form\AutorType;
 use App\Repository\AutorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use SortDirection;
+
 
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -22,6 +22,8 @@ final class AutorController extends AbstractController
     public function index(Request $request, AutorRepository $autorRepository, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
         $termo = $request->query->get('q');
+        $sort = $request->query->get('sortBy', 'codau');
+        $order = $request->query->get('sortDir', 'desc');
         
         $novoAutor = new Autor();
         $formNovo = $this->createForm(AutorType::class, $novoAutor);
@@ -36,8 +38,7 @@ final class AutorController extends AbstractController
 
         $formEditar = $this->createForm(AutorType::class, new Autor())->createView();
 
-        $queryBuilder = $autorRepository->findByNome($termo)
-            ->orderBy('a.CodAu', SortDirection::Descending);
+        $queryBuilder = $autorRepository->findByNome($termo, $sort, $order);
         $query = $queryBuilder->getQuery();
         $autors = $paginator->paginate(
             $query,
@@ -50,6 +51,8 @@ final class AutorController extends AbstractController
             'form_novo' => $formNovo->createView(),
             'form_editar' => $formEditar,
             'termo' => $termo,
+            'currentSort' => $sort,
+            'currentOrder' => strtolower($order),
         ]);
     }
 

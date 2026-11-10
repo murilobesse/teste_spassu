@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Livro;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Livro>
@@ -16,14 +17,41 @@ class LivroRepository extends ServiceEntityRepository
         parent::__construct($registry, Livro::class);
     }
 
-    public function findByTitulo(?string $titulo = null): \Doctrine\ORM\QueryBuilder
+    public function findByTitulo(
+        ?string $titulo = null, 
+        string $sort = 'codl', 
+        string $order = 'asc'
+    ): \Doctrine\ORM\QueryBuilder
     {
         $qb = $this->createQueryBuilder('l');
+
+        $allowedSorts = [
+            'codl' => 'l.codl',
+            'titulo' => 'l.titulo',
+            'editora' => 'l.editora',
+            'edicao' => 'l.edicao',
+            'anopublicacao' => 'l.anoPublicacao',
+            'valor' => 'l.valor',
+        ];
+        $sortField = $allowedSorts[strtolower($sort)] ?? 'l.codl';
+        
+        switch (strtolower($order)) {
+            case 'asc':
+                $order = SortDirection::Ascending;
+                break;
+            case 'desc':
+                $order = SortDirection::Descending;
+                break;
+            default:
+                $order = SortDirection::Descending;
+        }
 
         if ($titulo) {
             $qb->andWhere('LOWER(l.titulo) LIKE LOWER(:titulo)')
             ->setParameter('titulo', "%$titulo%");
         }
+
+        $qb->addOrderBy($sortField, $order);
 
         return $qb;
     }

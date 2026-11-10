@@ -1,4 +1,5 @@
 {% extends 'base.html.twig' %}
+{% import 'components/_sortable_header.html.twig' as sort %}
 
 {% block title %}Livros{% endblock %}
 
@@ -21,12 +22,13 @@
         <table class="table table-hover table-striped mb-0">
             <thead class="table-dark">
                 <tr>
-                    <th>Código</th>
-                    <th>Título</th>
-                    <th>Editora</th>
-                    <th>Edição</th>
-                    <th>Ano Pub.</th>
-                    <th class="text-end">Ações</th>
+                    <th style="width: 70px;">{{ sort.header('codl', 'Cód.', currentSort, currentOrder, 'app_livro_index') }}</th>
+                    <th>{{ sort.header('titulo', 'Título', currentSort, currentOrder, 'app_livro_index') }}</th>
+                    <th>{{ sort.header('editora', 'Editora', currentSort, currentOrder, 'app_livro_index') }}</th>
+                    <th style="width: 80px;">{{ sort.header('edicao', 'Edição', currentSort, currentOrder, 'app_livro_index') }}</th>
+                    <th style="width: 80px;">{{ sort.header('anopublicacao', 'Ano', currentSort, currentOrder, 'app_livro_index') }}</th>
+                    <th class="text-end" style="width: 120px;">{{ sort.header('valor', 'Valor', currentSort, currentOrder, 'app_livro_index') }}</th>
+                    <th class="text-end" style="width: 180px;">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,6 +39,7 @@
                     <td>{{ livro.editora }}</td>
                     <td>{{ livro.edicao }}</td>
                     <td>{{ livro.anoPublicacao }}</td>
+                    <td class="text-end">{{ livro.valor|format_currency('BRL') }}</td>
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-primary btn-editar-livro" 
                                 data-bs-toggle="modal" 

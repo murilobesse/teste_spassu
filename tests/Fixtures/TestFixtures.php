@@ -59,6 +59,9 @@ class TestFixtures extends Fixture
         $manager->flush();
     }
 
+    /**
+     * @param list<string> $roles
+     */
     private function createUser(string $email, string $nome, string $password, array $roles = ['ROLE_USER']): User
     {
         $user = new User();

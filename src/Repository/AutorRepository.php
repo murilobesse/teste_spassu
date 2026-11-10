@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Autor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Autor>
@@ -18,25 +17,24 @@ class AutorRepository extends ServiceEntityRepository
     }
 
     public function findByNome(
-        ?string $nome = null, 
-        string $sort = 'codau', 
-        string $order = 'desc'
-        ): \Doctrine\ORM\QueryBuilder
-    {
+        ?string $nome = null,
+        string $sort = 'codau',
+        string $order = 'desc',
+    ): \Doctrine\ORM\QueryBuilder {
         $qb = $this->createQueryBuilder('a');
 
         $allowedSorts = ['codau' => 'a.CodAu', 'nome' => 'a.nome'];
         $sortField = $allowedSorts[strtolower($sort)] ?? 'a.CodAu';
-        
+
         switch (strtolower($order)) {
             case 'asc':
-                $order = SortDirection::Ascending;
+                $order = \SortDirection::Ascending;
                 break;
             case 'desc':
-                $order = SortDirection::Descending;
+                $order = \SortDirection::Descending;
                 break;
             default:
-                $order = SortDirection::Descending;
+                $order = \SortDirection::Descending;
         }
 
         if ($nome) {
@@ -48,28 +46,28 @@ class AutorRepository extends ServiceEntityRepository
         return $qb;
     }
 
-//    /**
-//     * @return Autor[] Returns an array of Autor objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Autor[] Returns an array of Autor objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('a')
+    //            ->andWhere('a.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('a.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Autor
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Autor
+    //    {
+    //        return $this->createQueryBuilder('a')
+    //            ->andWhere('a.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

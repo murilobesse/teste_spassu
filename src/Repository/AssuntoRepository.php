@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Assunto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Assunto>
@@ -18,25 +17,24 @@ class AssuntoRepository extends ServiceEntityRepository
     }
 
     public function findByDescricao(
-        ?string $descricao = null, 
-        string $sort = 'codau', 
-        string $order = 'desc'
-    ): \Doctrine\ORM\QueryBuilder
-    {
+        ?string $descricao = null,
+        string $sort = 'codau',
+        string $order = 'desc',
+    ): \Doctrine\ORM\QueryBuilder {
         $qb = $this->createQueryBuilder('a');
 
         $allowedSorts = ['codau' => 'a.CodAs', 'nome' => 'a.nome'];
         $sortField = $allowedSorts[strtolower($sort)] ?? 'a.CodAs';
-        
+
         switch (strtolower($order)) {
             case 'asc':
-                $order = SortDirection::Ascending;
+                $order = \SortDirection::Ascending;
                 break;
             case 'desc':
-                $order = SortDirection::Descending;
+                $order = \SortDirection::Descending;
                 break;
             default:
-                $order = SortDirection::Descending;
+                $order = \SortDirection::Descending;
         }
 
         if ($descricao) {
@@ -49,28 +47,28 @@ class AssuntoRepository extends ServiceEntityRepository
         return $qb;
     }
 
-//    /**
-//     * @return Assunto[] Returns an array of Assunto objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('a.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Assunto[] Returns an array of Assunto objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('a')
+    //            ->andWhere('a.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('a.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Assunto
-//    {
-//        return $this->createQueryBuilder('a')
-//            ->andWhere('a.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Assunto
+    //    {
+    //        return $this->createQueryBuilder('a')
+    //            ->andWhere('a.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

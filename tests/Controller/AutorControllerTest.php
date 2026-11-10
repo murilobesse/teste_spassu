@@ -2,12 +2,12 @@
 
 namespace App\Tests\Controller;
 
-use App\Entity\User;
 use App\Entity\Autor;
+use App\Entity\User;
 use App\Repository\AutorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 final class AutorControllerTest extends WebTestCase
 {
@@ -38,7 +38,7 @@ final class AutorControllerTest extends WebTestCase
         $this->client->request('GET', '/autor/');
         $this->assertResponseIsSuccessful();
 
-        $this->assertSelectorTextContains('h1','Lista de Autores');
+        $this->assertSelectorTextContains('h1', 'Lista de Autores');
     }
 
     public function testInsertAutor(): void
@@ -77,19 +77,19 @@ final class AutorControllerTest extends WebTestCase
 
         $this->client->request(
             'POST',
-            '/autor/' . $id . '/editar',
+            '/autor/'.$id.'/editar',
             [
                 'autor' => [
                     'nome' => 'Albert Camus Edit',
                     '_token' => $token,
-                ]
+                ],
             ]
         );
 
         $this->assertResponseRedirects('/autor/');
 
         $entityManager->clear();
-        
+
         $autorAtualizado = $entityManager->getRepository(Autor::class)->find($id);
 
         $this->assertSame('Albert Camus Edit', $autorAtualizado->getNome());
@@ -113,9 +113,9 @@ final class AutorControllerTest extends WebTestCase
 
         $this->client->request(
             'POST',
-            '/autor/' . $id,
+            '/autor/'.$id,
             [
-                '_token' => $token
+                '_token' => $token,
             ]
         );
 
@@ -139,7 +139,7 @@ final class AutorControllerTest extends WebTestCase
         ]);
 
         $this->client->submit($form);
-        
+
         $autor = static::getContainer()
             ->get(AutorRepository::class)
             ->findOneBy(['nome' => '']);

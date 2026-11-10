@@ -2,18 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-
 use App\Entity\Assunto;
 use App\Form\AssuntoType;
 use App\Repository\AssuntoRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use SortDirection;
-
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/assunto')]
 final class AssuntoController extends AbstractController
@@ -33,6 +30,7 @@ final class AssuntoController extends AbstractController
             $entityManager->persist($novoAssunto);
             $entityManager->flush();
             $this->addFlash('success', 'Assunto criado com sucesso!');
+
             return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -68,18 +66,18 @@ final class AssuntoController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Assunto criado com sucesso!');
+
             return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            $errors = $form->getErrors(true); 
-            $errorMessages = [];
-            
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-            
-            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
-            $this->addFlash('error', 'Erro ao criar assunto: ' . $mensagemErro);
         }
+        $errors = $form->getErrors(true);
+        $errorMessages = [];
+
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getMessage();
+        }
+
+        $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+        $this->addFlash('error', 'Erro ao criar assunto: '.$mensagemErro);
 
         return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -100,18 +98,18 @@ final class AssuntoController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Assunto atualizado com sucesso!');
+
             return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            $errors = $form->getErrors(true); 
-            $errorMessages = [];
-            
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-            
-            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
-            $this->addFlash('error', 'Erro ao editar assunto: ' . $mensagemErro);
         }
+        $errors = $form->getErrors(true);
+        $errorMessages = [];
+
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getMessage();
+        }
+
+        $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+        $this->addFlash('error', 'Erro ao editar assunto: '.$mensagemErro);
 
         return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -127,6 +125,7 @@ final class AssuntoController extends AbstractController
 
         if ($assunto->getLivros()->count() > 0) {
             $this->addFlash('error', 'Não é possível excluir este assunto, pois ele possui livros vinculados.');
+
             return $this->redirectToRoute('app_assunto_index', [], Response::HTTP_SEE_OTHER);
         }
 

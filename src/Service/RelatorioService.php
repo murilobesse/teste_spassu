@@ -13,6 +13,16 @@ class RelatorioService
         $this->connection = $connection;
     }
 
+    /**
+     * @return array<string, list<array{
+     *     autor_nome: string,
+     *     livro_titulo: string,
+     *     livro_editora: string,
+     *     livro_edicao: int,
+     *     livro_ano: string,
+     *     livro_valor: numeric-string
+     * }>>
+     */
     public function getRelatorioAgrupadoPorAutor(): array
     {
         $sql = '
@@ -42,6 +52,16 @@ class RelatorioService
         );
     }
 
+    /**
+     * @return array<string, list<array{
+     *     assunto_descricao: string,
+     *     livro_titulo: string,
+     *     livro_editora: string,
+     *     livro_edicao: int,
+     *     livro_ano: string,
+     *     livro_valor: numeric-string
+     * }>>
+     */
     public function getRelatorioAgrupadoPorAssunto(): array
     {
         $sql = '

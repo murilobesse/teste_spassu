@@ -73,6 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setNome(string $nome): static
     {
         $this->nome = $nome;
+
         return $this;
     }
 
@@ -119,8 +120,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __serialize(): array
     {
         $data = (array) $this;
-        $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
-        
+        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
+
         return $data;
     }
 
@@ -138,6 +139,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAtivo(bool $ativo): static
     {
         $this->ativo = $ativo;
+
         return $this;
     }
 }

@@ -82,7 +82,7 @@ class RelatorioServiceTest extends TestCase
         $this->assertCount(2, $relatorio['Clarice Lispector']);
 
         $this->assertCount(2, $relatorio['Machado de Assis']);
-        
+
         $titulosClarice = array_column($relatorio['Clarice Lispector'], 'livro_titulo');
         $this->assertContains('A Hora da Estrela', $titulosClarice);
         $this->assertContains('Antologia', $titulosClarice);
@@ -129,6 +129,9 @@ class RelatorioServiceTest extends TestCase
         $this->assertSame(0, $total);
     }
 
+    /**
+     * @param list<array<string, mixed>> $rows
+     */
     private function mockFetchAll(array $rows): void
     {
         $result = $this->createMock(Result::class);

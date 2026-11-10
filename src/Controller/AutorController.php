@@ -2,18 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Attribute\Route;
-
 use App\Entity\Autor;
 use App\Form\AutorType;
 use App\Repository\AutorRepository;
 use Doctrine\ORM\EntityManagerInterface;
-
-
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/autor')]
 final class AutorController extends AbstractController
@@ -24,7 +21,7 @@ final class AutorController extends AbstractController
         $termo = $request->query->get('q');
         $sort = $request->query->get('sortBy', 'codau');
         $order = $request->query->get('sortDir', 'desc');
-        
+
         $novoAutor = new Autor();
         $formNovo = $this->createForm(AutorType::class, $novoAutor);
         $formNovo->handleRequest($request);
@@ -33,6 +30,7 @@ final class AutorController extends AbstractController
             $entityManager->persist($novoAutor);
             $entityManager->flush();
             $this->addFlash('success', 'Autor criado com sucesso!');
+
             return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -68,18 +66,18 @@ final class AutorController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Autor criado com sucesso!');
+
             return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            $errors = $form->getErrors(true); 
-            $errorMessages = [];
-            
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-            
-            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
-            $this->addFlash('error', 'Erro ao criar autor: ' . $mensagemErro);
         }
+        $errors = $form->getErrors(true);
+        $errorMessages = [];
+
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getMessage();
+        }
+
+        $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+        $this->addFlash('error', 'Erro ao criar autor: '.$mensagemErro);
 
         return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -95,32 +93,32 @@ final class AutorController extends AbstractController
 
         $form = $this->createForm(AutorType::class, $autor);
         $form->handleRequest($request);
-        
+
         if ($form->isSubmitted() && !$form->isValid()) {
-    foreach ($form->getErrors(true) as $error) {
-        dump([
-            'campo' => $error->getOrigin()?->getName(),
-            'erro' => $error->getMessage(),
-        ]);
-    }
-}
+            foreach ($form->getErrors(true) as $error) {
+                dump([
+                    'campo' => $error->getOrigin()?->getName(),
+                    'erro' => $error->getMessage(),
+                ]);
+            }
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
             $this->addFlash('success', 'Autor atualizado com sucesso!');
+
             return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
-        } else {
-            $errors = $form->getErrors(true); 
-            $errorMessages = [];
-            
-            foreach ($errors as $error) {
-                $errorMessages[] = $error->getMessage();
-            }
-            
-            $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
-            $this->addFlash('error', 'Erro ao editar autor: ' . $mensagemErro);
         }
+        $errors = $form->getErrors(true);
+        $errorMessages = [];
+
+        foreach ($errors as $error) {
+            $errorMessages[] = $error->getMessage();
+        }
+
+        $mensagemErro = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Erro desconhecido ao validar o formulário.';
+        $this->addFlash('error', 'Erro ao editar autor: '.$mensagemErro);
 
         return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -133,9 +131,10 @@ final class AutorController extends AbstractController
         if (!$autor) {
             throw $this->createNotFoundException('Autor não encontrado.');
         }
-        
+
         if ($autor->getLivros()->count() > 0) {
             $this->addFlash('error', 'Não é possível excluir este autor, pois ele possui livros vinculados.');
+
             return $this->redirectToRoute('app_autor_index', [], Response::HTTP_SEE_OTHER);
         }
 

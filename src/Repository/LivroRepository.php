@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\Entity\Livro;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use SortDirection;
 
 /**
  * @extends ServiceEntityRepository<Livro>
@@ -18,11 +17,10 @@ class LivroRepository extends ServiceEntityRepository
     }
 
     public function findByTitulo(
-        ?string $titulo = null, 
-        string $sort = 'codl', 
-        string $order = 'asc'
-    ): \Doctrine\ORM\QueryBuilder
-    {
+        ?string $titulo = null,
+        string $sort = 'codl',
+        string $order = 'asc',
+    ): \Doctrine\ORM\QueryBuilder {
         $qb = $this->createQueryBuilder('l');
 
         $allowedSorts = [
@@ -34,16 +32,16 @@ class LivroRepository extends ServiceEntityRepository
             'valor' => 'l.valor',
         ];
         $sortField = $allowedSorts[strtolower($sort)] ?? 'l.codl';
-        
+
         switch (strtolower($order)) {
             case 'asc':
-                $order = SortDirection::Ascending;
+                $order = \SortDirection::Ascending;
                 break;
             case 'desc':
-                $order = SortDirection::Descending;
+                $order = \SortDirection::Descending;
                 break;
             default:
-                $order = SortDirection::Descending;
+                $order = \SortDirection::Descending;
         }
 
         if ($titulo) {
@@ -56,28 +54,28 @@ class LivroRepository extends ServiceEntityRepository
         return $qb;
     }
 
-//    /**
-//     * @return Livro[] Returns an array of Livro objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('l.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    //    /**
+    //     * @return Livro[] Returns an array of Livro objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('l')
+    //            ->andWhere('l.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('l.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
 
-//    public function findOneBySomeField($value): ?Livro
-//    {
-//        return $this->createQueryBuilder('l')
-//            ->andWhere('l.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    //    public function findOneBySomeField($value): ?Livro
+    //    {
+    //        return $this->createQueryBuilder('l')
+    //            ->andWhere('l.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
 }

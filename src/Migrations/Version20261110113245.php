@@ -33,7 +33,6 @@ final class Version20261110113245 extends AbstractMigration
             INNER JOIN assunto a ON la.assunto_codas = a.codas
             ORDER BY a.descricao ASC, l.titulo ASC
         ');
-
     }
 
     public function down(Schema $schema): void

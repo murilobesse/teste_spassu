@@ -2,22 +2,23 @@
 
 namespace App\Form;
 
-use App\Entity\Livro;
-use App\Entity\Autor;
 use App\Entity\Assunto;
+use App\Entity\Autor;
+use App\Entity\Livro;
+use App\Form\DataTransformer\MoneyToFloatTransformer;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use App\Form\DataTransformer\MoneyToFloatTransformer;
-
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\MoneyType;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\PositiveOrZero;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
+/**
+ * @extends AbstractType<Livro>
+ */
 class LivroType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -28,67 +29,67 @@ class LivroType extends AbstractType
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: O Estrangeiro',
-                    'required' => true
+                    'required' => true,
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlank(message: 'O título é obrigatório.'),
-                    new Length(max: 40, maxMessage: 'O título não pode ter mais de 40 caracteres.')
-                ]
+                    new Length(max: 40, maxMessage: 'O título não pode ter mais de 40 caracteres.'),
+                ],
             ])
             ->add('editora', TextType::class, [
                 'label' => 'Editora',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: Editora Record',
-                    'required' => true
+                    'required' => true,
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlank(message: 'A editora é obrigatória.'),
-                    new Length(max: 40, maxMessage: 'A editora não pode ter mais de 40 caracteres.')
-                ]
+                    new Length(max: 40, maxMessage: 'A editora não pode ter mais de 40 caracteres.'),
+                ],
             ])
             ->add('edicao', NumberType::class, [
                 'label' => 'Edição',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: 1ª Edição',
-                    'required' => true
+                    'required' => true,
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlank(message: 'A edição é obrigatória.'),
-                    new Length(max: 40, maxMessage: 'A edição não pode ter mais de 40 caracteres.')
-                ]
+                    new Length(max: 40, maxMessage: 'A edição não pode ter mais de 40 caracteres.'),
+                ],
             ])
             ->add('anoPublicacao', NumberType::class, [
                 'label' => 'Ano de Publicação',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: 2020',
-                    'maxlength'=> 4,
-                    'required' => true
+                    'maxlength' => 4,
+                    'required' => true,
                 ],
                 'empty_data' => '',
                 'constraints' => [
                     new NotBlank(message: 'O ano de publicação é obrigatório.'),
-                    new Length(max: 4, maxMessage: 'O ano de publicação não pode ter mais de 4 caracteres.')
-                ]
+                    new Length(max: 4, maxMessage: 'O ano de publicação não pode ter mais de 4 caracteres.'),
+                ],
             ])
             ->add('valor', TextType::class, [
                 'label' => 'Valor (R$)',
-                //'currency' => 'BRL',
+                // 'currency' => 'BRL',
                 'attr' => [
                     'class' => 'form-control',
                     'placeholder' => 'Ex: R$ 19,90',
                     'type' => 'text',
-                    'required' =>true
+                    'required' => true,
                 ],
                 'constraints' => [
                     new NotBlank(message: 'O valor é obrigatório.'),
-                    new PositiveOrZero(message: 'O valor não pode ser negativo.')
-                ]
+                    new PositiveOrZero(message: 'O valor não pode ser negativo.'),
+                ],
             ])
             ->add('autores', EntityType::class, [
                 'class' => Autor::class,
@@ -114,7 +115,7 @@ class LivroType extends AbstractType
                     'placeholder' => 'Selecione os assuntos...',
                     'autocomplete' => 'off',
                 ],
-                'constraints' => [new NotBlank(message: 'Selecione pelo menos um assunto.')]
+                'constraints' => [new NotBlank(message: 'Selecione pelo menos um assunto.')],
             ]);
 
         $builder->get('valor')->addModelTransformer(new MoneyToFloatTransformer());

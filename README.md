@@ -28,14 +28,13 @@ Sistema web para gerenciamento de cadastros de livros, permitindo o cadastro de 
 
 ---
 
-## Como Rodar o Projeto
-
 ## Pré-requisitos
 
 - **Docker** e **Docker Compose** instalados
 - **Git** instalado
 
-## Opção 1: Ambiente Híbrido (Usando o Docker apenas para isolar o banco de dados)
+
+## Como Rodar o Projeto
 
 **1. Clonar o repositório**
 ```bash
@@ -43,39 +42,44 @@ git clone https://github.com/murilobesse/teste_spassu.git
 cd teste_spassu
 ```
 
-**2. Instalar dependências**
+**2. Configurar o ambiente**
+```bash
+cp .env.example .env
+cp .env.example .env.local
+cp .env.example .env.test
+```
+Certifique-se de que a `DATABASE_URL` nos arquivos `.env.*` apontam para o container:
+```env
+DATABASE_URL="postgresql://app:!MinhaSenha123@127.0.0.1:5432/app?serverVersion=18&charset=utf8"
+```
+
+
+## Opção 1: Ambiente Híbrido (Usando o Docker apenas para isolar o banco de dados)
+
+**1. Instalar dependências**
 ```bash
 composer install
 npm install
 npm run dev # Ou 'npm run watch' para desenvolvimento contínuo
 ```
 
-**3. Configurar o ambiente**
-```bash
-cp .env.example .env.local
-```
-Certifique-se de que a `DATABASE_URL` no `.env.local` aponta para o container:
-```env
-DATABASE_URL="postgresql://db_livros:!MinhaSenha123@127.0.0.1:5432/app?serverVersion=18&charset=utf8"
-```
-
-**4. Subir apenas o banco de dados via Docker**
+**2. Subir apenas o banco de dados via Docker**
 ```bash
 docker compose up -d
 ```
 
-**5. Criar o banco e aplicar migrations**
+**3. Criar o banco e aplicar migrations**
 ```bash
 php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-**6. Popular com dados de teste**
+**4. Popular com dados de teste**
 ```bash
 php bin/console doctrine:fixtures:load
 ```
 
-**7. Rodar o servidor local**
+**5. Rodar o servidor local**
 ```bash
 php -S 127.0.0.1:8000 -t public
 ```
@@ -83,7 +87,7 @@ php -S 127.0.0.1:8000 -t public
 Acesse com email: **admin@teste.com**
 senha: **123456**
 
-**8. Testes Automatizados**
+**6. Testes Automatizados**
 ```bash
 # 1. Criar o banco de teste (apenas na primeira vez)
 docker compose exec database psql -U app -c "CREATE DATABASE app_test;"
@@ -99,20 +103,11 @@ vendor/bin/phpunit
 
 ## Opção 2: Ambiente 100% Dockerizado
 
-**1. Clonar o Repositório**
+**1. Subir todos os containers (usando o arquivo completo)**
 
 ```bash
-git clone https://github.com/murilobesse/teste_spassu.git
-cd teste-spassu
-```
-
-Certifique-se de que a `DATABASE_URL` no `.env.local` aponta para o container:
-```env
-DATABASE_URL="postgresql://app:!ChangeMe!@database:5432/app?serverVersion=18&charset=utf8"
-```
-
-**2. Subir todos os containers (usando o arquivo completo)**
 docker compose -f compose.full.yaml up -d
+```
 
 Pronto! O `entrypoint.sh` do container PHP vai automaticamente:
 - Instalar dependências PHP (`composer install`)
@@ -123,6 +118,19 @@ Pronto! O `entrypoint.sh` do container PHP vai automaticamente:
 - Compilar os assets (`npm run dev`)
 
 
+**2. Verifique os logs**
+
+```base
+docker compose -f compose.full.yaml logs -f php
+```
+
+**Aguarde a mensagem final:**
+```bash
+Projeto pronto!
+Acesse: http://localhost:8080
+```
+
+
 **3. Acessar o Sistema**
 
 Abra no navegador: **http://localhost:8080**
@@ -130,7 +138,7 @@ Abra no navegador: **http://localhost:8080**
 Acesse com email: **admin@teste.com**
 senha: **123456**
 
-**4. Testes Automatizados**
+**3. Testes Automatizados**
 
 ```bash
 # 1. Criar o banco de teste (apenas na primeira vez)
